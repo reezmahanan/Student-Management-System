@@ -1,16 +1,16 @@
 public class Student {
     private String name;
-    private String id;
     private int age;
+    private String id;
 
-    // Parameterized constructor
-    public Student(String studentName, String studentId, int studentAge) {
-        this.name = studentName;
-        this.age = studentAge;
-        this.id = studentId;
+    // Constructor
+    public Student(String name, int age, String id) {
+        this.name = name;
+        this.age = age;
+        this.id = id;
     }
 
-    // getters and setters
+    // Getters and Setters
     public String getName() {
         return name;
     }
@@ -35,7 +35,9 @@ public class Student {
         this.id = id;
     }
 
+    // Display info
     public void displayInfo() {
-        System.out.println("ID: " + id + "  Name: " + name + "  Age: " + age);
+        System.out.println("ID: " + id + " | Name: " + name + " | Age: " + age);
     }
 }
+
