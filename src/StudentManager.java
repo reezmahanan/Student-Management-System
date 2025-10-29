@@ -1,40 +1,42 @@
 import java.util.ArrayList;
 
-
 public class StudentManager {
-    // Student ArrayList
-    private ArrayList<Student> studentArray = new ArrayList<>();
+    private ArrayList<Student> students = new ArrayList<>();
 
-    // Add students
-    public void addStudents(Student student) {
-        studentArray.add(student);
-        System.out.println("Student added successfully!\n");
+    public void addStudent(Student student) {
+        students.add(student);
+        System.out.println("✅ Student added successfully!\n");
     }
 
-    // Display all the students
     public void displayAllStudents() {
-        for (Student student : studentArray) {
+        if (students.isEmpty()) {
+            System.out.println("No students found.");
+            return;
+        }
+
+        System.out.println("\n📋 Student List:");
+        for (Student student: students) {
             student.displayInfo();
         }
         System.out.println();
     }
 
-    // Remove students
     public void removeStudent(String id) {
         boolean found = false;
-        for (Student student : studentArray) {
+        for (Student student: students) {
             if (student.getId().equalsIgnoreCase(id)) {
-                studentArray.remove(student);
-                System.out.println("Student removed successfully!");
+                students.remove(student);
+                System.out.println("🗑️ Student removed successfully!\n");
                 found = true;
-                break; // exit loop immediately after removing
+                break;
             }
         }
         if (!found) {
-            System.out.println("No Student found with id: " + id + "\n");
+            System.out.println("⚠️ No student found with ID: " + id + "\n");
         }
     }
-
 }
+
+
 
 
