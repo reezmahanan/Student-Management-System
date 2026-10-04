@@ -7,18 +7,14 @@ import {
   TextField,
   Button,
   Alert,
-  Divider,
-  Chip,
-  Stack,
 } from '@mui/material';
 import SchoolIcon from '@mui/icons-material/School';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('admin123');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -38,11 +34,6 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleDemoFill = (u, p) => {
-    setUsername(u);
-    setPassword(p);
   };
 
   return (
@@ -112,7 +103,7 @@ export default function Login() {
             </Button>
           </form>
 
-          <Box sx={{ textAlign: 'center', mt: 2 }}>
+          <Box sx={{ textAlign: 'center', mt: 3 }}>
             <Typography variant="body2" color="text.secondary">
               Don't have an account?{' '}
               <Button
@@ -125,38 +116,6 @@ export default function Login() {
               </Button>
             </Typography>
           </Box>
-
-          <Divider sx={{ my: 3 }}>
-            <Typography variant="caption" color="text.secondary">
-              QUICK DEMO LOGINS
-            </Typography>
-          </Divider>
-
-          <Stack direction="row" spacing={1} justifyContent="center" flexWrap="wrap" useFlexGap>
-            <Chip
-              label="Admin (admin / admin123)"
-              clickable
-              color="primary"
-              variant="outlined"
-              size="small"
-              onClick={() => handleDemoFill('admin', 'admin123')}
-            />
-            <Chip
-              label="Teacher (teacher / teacher123)"
-              clickable
-              color="secondary"
-              variant="outlined"
-              size="small"
-              onClick={() => handleDemoFill('teacher', 'teacher123')}
-            />
-            <Chip
-              label="Student (student / student123)"
-              clickable
-              variant="outlined"
-              size="small"
-              onClick={() => handleDemoFill('student', 'student123')}
-            />
-          </Stack>
         </CardContent>
       </Card>
     </Box>
