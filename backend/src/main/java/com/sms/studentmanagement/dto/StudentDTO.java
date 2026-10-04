@@ -14,6 +14,9 @@ public class StudentDTO {
 
     private Long id;
 
+    // Sri Lankan Admission / Student ID (e.g. "ST/2026/001")
+    private String admissionNo;
+
     @NotBlank(message = "First name is required")
     @Size(max = 100, message = "First name must not exceed 100 characters")
     private String firstName;
@@ -21,6 +24,11 @@ public class StudentDTO {
     @NotBlank(message = "Last name is required")
     @Size(max = 100, message = "Last name must not exceed 100 characters")
     private String lastName;
+
+    private String fullNameWithInitials;
+
+    // Sri Lankan NIC number (e.g. "200312345678" or "991234567V")
+    private String nicNo;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Email must be a valid email address")
@@ -37,6 +45,17 @@ public class StudentDTO {
 
     @Size(max = 500, message = "Address must not exceed 500 characters")
     private String address;
+
+    // Sri Lankan District & Province
+    private String district;
+    private String province;
+
+    // Academic Stream (e.g. Physical Science, Bio Science, Technology, Commerce, Arts)
+    private String academicStream;
+
+    // Guardian details
+    private String guardianName;
+    private String guardianPhone;
 
     private LocalDate enrollmentDate;
 

@@ -90,96 +90,120 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public void seedInitialUsersAndDemoData() {
         if (userRepository.count() == 0) {
-            log.info("Seeding initial admin, teacher, and student users...");
+            log.info("Seeding initial Sri Lankan admin, teacher, and student users...");
 
             userRepository.save(User.builder()
                     .username("admin")
-                    .email("admin@sms.edu")
-                    .fullName("System Administrator")
+                    .email("admin@sms.edu.lk")
+                    .fullName("Principal / Academic Registrar")
                     .password(passwordEncoder.encode("admin123"))
                     .role(Role.ROLE_ADMIN)
                     .build());
 
             userRepository.save(User.builder()
                     .username("teacher")
-                    .email("teacher@sms.edu")
-                    .fullName("Prof. Alan Turing")
+                    .email("teacher@sms.edu.lk")
+                    .fullName("Prof. Sunimal Senanayake")
                     .password(passwordEncoder.encode("teacher123"))
                     .role(Role.ROLE_TEACHER)
                     .build());
 
             userRepository.save(User.builder()
                     .username("student")
-                    .email("student@sms.edu")
-                    .fullName("Alex Johnson")
+                    .email("student@sms.edu.lk")
+                    .fullName("Kasun Bandara")
                     .password(passwordEncoder.encode("student123"))
                     .role(Role.ROLE_STUDENT)
                     .build());
         }
 
-        // Also seed initial courses and students if database is fresh
+        // Seed Sri Lankan curriculum subjects & courses
         if (courseRepository.count() == 0) {
-            log.info("Seeding sample courses...");
+            log.info("Seeding Sri Lankan curriculum courses & subjects...");
             Course cs101 = courseRepository.save(Course.builder()
-                    .courseName("Introduction to Computer Science")
-                    .courseCode("CS101")
+                    .courseName("Combined Mathematics & Computing")
+                    .courseCode("AL-MATH-01")
                     .credits(4)
-                    .duration("1 Semester")
-                    .description("Core computing concepts, algorithms, and Java programming fundamentals.")
+                    .duration("Year 12 - Term 1")
+                    .description("G.C.E. Advanced Level Physical Science curriculum with pure and applied mathematics.")
                     .build());
 
             Course web201 = courseRepository.save(Course.builder()
-                    .courseName("Full-Stack Web Development")
-                    .courseCode("WEB201")
+                    .courseName("Information & Communication Technology (ICT)")
+                    .courseCode("AL-ICT-02")
                     .credits(3)
-                    .duration("1 Semester")
-                    .description("Modern frontend and backend web architecture with React and Spring Boot.")
+                    .duration("Year 12 - Term 1")
+                    .description("G.C.E. A/L ICT stream covering software engineering, database systems, and networking.")
                     .build());
 
-            Course db301 = courseRepository.save(Course.builder()
-                    .courseName("Database Management Systems")
-                    .courseCode("DB301")
-                    .credits(3)
-                    .duration("1 Semester")
-                    .description("Relational database design, SQL querying, indexing, and NoSQL fundamentals.")
+            Course phy301 = courseRepository.save(Course.builder()
+                    .courseName("Physics & Electronics Laboratory")
+                    .courseCode("AL-PHY-03")
+                    .credits(4)
+                    .duration("Year 12 - Term 1")
+                    .description("Theoretical mechanics, electromagnetism, modern physics, and laboratory experiments.")
                     .build());
 
             if (studentRepository.count() == 0) {
-                log.info("Seeding sample students...");
+                log.info("Seeding Sri Lankan student directory demo records...");
                 Student s1 = Student.builder()
-                        .firstName("Alex")
-                        .lastName("Johnson")
-                        .email("alex.johnson@student.edu")
-                        .phone("+1 555-0101")
+                        .admissionNo("ST/2026/001")
+                        .firstName("Kasun")
+                        .lastName("Bandara")
+                        .fullNameWithInitials("K.M. Kasun Bandara")
+                        .nicNo("200318501244")
+                        .email("kasun.bandara@student.edu.lk")
+                        .phone("+94 77 123 4567")
                         .gender("MALE")
                         .dateOfBirth(LocalDate.of(2003, 5, 14))
-                        .address("104 Campus Drive, Hall B")
+                        .address("No. 45, Temple Road, Maharagama")
+                        .district("Colombo")
+                        .province("Western Province")
+                        .academicStream("A/L Physical Science (Maths)")
+                        .guardianName("Sunil Bandara")
+                        .guardianPhone("+94 71 888 1234")
                         .enrollmentDate(LocalDate.now().minusMonths(6))
                         .courses(Set.of(cs101, web201))
                         .build();
 
                 Student s2 = Student.builder()
-                        .firstName("Sophia")
-                        .lastName("Miller")
-                        .email("sophia.m@student.edu")
-                        .phone("+1 555-0102")
+                        .admissionNo("ST/2026/002")
+                        .firstName("Nadeesha")
+                        .lastName("Perera")
+                        .fullNameWithInitials("W.A. Nadeesha Perera")
+                        .nicNo("200465209871")
+                        .email("nadeesha.p@student.edu.lk")
+                        .phone("+94 71 456 7890")
                         .gender("FEMALE")
                         .dateOfBirth(LocalDate.of(2004, 2, 20))
-                        .address("88 Pinecrest Ave, Apt 4")
+                        .address("12/B, Lake Round, Kandy")
+                        .district("Kandy")
+                        .province("Central Province")
+                        .academicStream("A/L Technology Stream")
+                        .guardianName("Anura Perera")
+                        .guardianPhone("+94 77 999 5678")
                         .enrollmentDate(LocalDate.now().minusMonths(3))
-                        .courses(Set.of(web201, db301))
+                        .courses(Set.of(web201, phy301))
                         .build();
 
                 Student s3 = Student.builder()
-                        .firstName("David")
-                        .lastName("Kim")
-                        .email("david.kim@student.edu")
-                        .phone("+1 555-0103")
+                        .admissionNo("ST/2026/003")
+                        .firstName("Tharindu")
+                        .lastName("Silva")
+                        .fullNameWithInitials("H.P. Tharindu Silva")
+                        .nicNo("200214803321")
+                        .email("tharindu.silva@student.edu.lk")
+                        .phone("+94 76 987 6543")
                         .gender("MALE")
                         .dateOfBirth(LocalDate.of(2002, 11, 9))
-                        .address("12 University Terrace")
+                        .address("88 Galle Road, Matara")
+                        .district("Matara")
+                        .province("Southern Province")
+                        .academicStream("A/L Physical Science (Maths)")
+                        .guardianName("Dharmadasa Silva")
+                        .guardianPhone("+94 70 333 4455")
                         .enrollmentDate(LocalDate.now().minusMonths(8))
-                        .courses(Set.of(cs101, db301))
+                        .courses(Set.of(cs101, phy301))
                         .build();
 
                 studentRepository.save(s1);

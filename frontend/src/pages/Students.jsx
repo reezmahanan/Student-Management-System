@@ -26,6 +26,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { useNavigate } from 'react-router-dom';
 import {
   getAllStudents,
@@ -33,7 +34,7 @@ import {
   updateStudent,
   deleteStudent,
 } from '../api/studentApi';
-import { downloadStudentsExcel, downloadStudentsCsv } from '../api/analyticsApi';
+import { downloadStudentsExcel, downloadStudentsPdf } from '../api/analyticsApi';
 import StudentForm from '../components/StudentForm';
 import ConfirmDialog from '../components/ConfirmDialog';
 
@@ -77,7 +78,7 @@ export default function Students() {
           setStudents([]);
         }
       })
-      .catch(() => setError('Failed to load students.'))
+      .catch(() => setError('Failed to load student directory.'))
       .finally(() => setLoading(false));
   }, [page, search]);
 
@@ -131,10 +132,10 @@ export default function Students() {
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
         <div>
           <Typography variant="h4" fontWeight={700}>
-            Students Directory
+            Sri Lankan Student Directory
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Manage student registrations, profile details, and course enrollments
+            Ministry of Education Registry • Student Profiles, NIC & Academic Streams
           </Typography>
         </div>
 
@@ -148,10 +149,19 @@ export default function Students() {
           </Button>
           <Button
             variant="contained"
+            color="error"
+            startIcon={<PictureAsPdfIcon />}
+            onClick={downloadStudentsPdf}
+            sx={{ bgcolor: '#d32f2f' }}
+          >
+            Export PDF
+          </Button>
+          <Button
+            variant="contained"
             startIcon={<AddIcon />}
             onClick={handleAddClick}
           >
-            Add Student
+            Register Student
           </Button>
         </Box>
       </Box>
@@ -161,7 +171,7 @@ export default function Students() {
       {/* Search Bar */}
       <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
         <TextField
-          placeholder="Search by name or email…"
+          placeholder="Search by name, admission no, or email…"
           size="small"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
@@ -173,7 +183,7 @@ export default function Students() {
               </InputAdornment>
             ),
           }}
-          sx={{ width: 340 }}
+          sx={{ width: 360 }}
         />
         <Button variant="outlined" onClick={handleSearch}>Search</Button>
         {search && (
@@ -185,9 +195,9 @@ export default function Students() {
 
       <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
         <Table>
-          <TableHead sx={{ bgcolor: 'primary.main' }}>
+          <TableHead sx={{ bgcolor: '#0d47a1' }}>
             <TableRow>
-              {['ID', 'Name', 'Email', 'Phone', 'Gender', 'Enrollment Date', 'Courses', 'Actions'].map((h) => (
+              {['Admission No', 'Student Name', 'NIC No', 'Stream / Grade', 'District', 'Contact Phone', 'Enrolled Subjects', 'Actions'].map((h) => (
                 <TableCell key={h} sx={{ color: '#fff', fontWeight: 700 }}>{h}</TableCell>
               ))}
             </TableRow>
@@ -202,38 +212,39 @@ export default function Students() {
             ) : students.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={8} align="center" sx={{ py: 4, color: 'text.secondary' }}>
-                  No students found.
+                  No students found in the registry. Click "Register Student" to add a new record.
                 </TableCell>
               </TableRow>
             ) : (
               students.map((s) => (
                 <TableRow key={s.id} hover>
-                  <TableCell>{s.id}</TableCell>
-                  <TableCell sx={{ fontWeight: 600 }}>
-                    {s.firstName} {s.lastName}
+                  <TableCell sx={{ fontWeight: 700, color: 'primary.dark' }}>
+                    {s.admissionNo || `ST/2026/${s.id}`}
                   </TableCell>
-                  <TableCell>{s.email}</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>
+                    {s.fullNameWithInitials || `${s.firstName} ${s.lastName}`}
+                  </TableCell>
+                  <TableCell>
+                    <Chip label={s.nicNo || '—'} size="small" variant="outlined" />
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2" sx={{ maxWidth: 180, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {s.academicStream || 'General'}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Chip label={s.district || 'Colombo'} size="small" color="info" variant="outlined" />
+                  </TableCell>
                   <TableCell>{s.phone || '—'}</TableCell>
                   <TableCell>
                     <Chip
-                      label={s.gender || '—'}
-                      color={GENDER_COLORS[s.gender] || 'default'}
+                      label={`${s.courses?.length || 0} Subjects`}
                       size="small"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    {s.enrollmentDate ? s.enrollmentDate.substring(0, 10) : '—'}
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={`${s.courses?.length || 0} enrolled`}
-                      size="small"
-                      variant="outlined"
                       color="primary"
                     />
                   </TableCell>
                   <TableCell>
-                    <Tooltip title="View Profile">
+                    <Tooltip title="View Profile & Transcript">
                       <IconButton size="small" color="info" onClick={() => navigate(`/students/${s.id}`)}>
                         <VisibilityIcon fontSize="small" />
                       </IconButton>
@@ -276,8 +287,8 @@ export default function Students() {
 
       <ConfirmDialog
         open={confirmOpen}
-        title="Delete Student"
-        message="Are you sure you want to delete this student? All linked records will be affected."
+        title="Delete Student Record"
+        message="Are you sure you want to delete this student from the national registry? This action cannot be reversed."
         onConfirm={handleDeleteConfirm}
         onCancel={() => { setConfirmOpen(false); setDeletingId(null); }}
       />

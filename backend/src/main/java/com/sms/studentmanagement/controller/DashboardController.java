@@ -64,7 +64,7 @@ public class DashboardController {
         double overallAverageGpa = students.isEmpty() ? 0.0 : Math.round((totalGpa / students.size()) * 100.0) / 100.0;
         double overallAttendanceRate = students.isEmpty() ? 100.0 : Math.round((totalAtt / students.size()) * 10.0) / 10.0;
 
-        // Fees
+        // Fees (in Sri Lankan Rupees LKR)
         BigDecimal totalFeesCollected = feePaymentRepository.sumAmountByStatus(PaymentStatus.PAID);
         BigDecimal pendingFees = feePaymentRepository.sumAmountByStatus(PaymentStatus.PENDING);
 
@@ -110,13 +110,21 @@ public class DashboardController {
 
         return StudentDTO.builder()
                 .id(student.getId())
+                .admissionNo(student.getAdmissionNo())
                 .firstName(student.getFirstName())
                 .lastName(student.getLastName())
+                .fullNameWithInitials(student.getFullNameWithInitials())
+                .nicNo(student.getNicNo())
                 .email(student.getEmail())
                 .phone(student.getPhone())
                 .dateOfBirth(student.getDateOfBirth())
                 .gender(student.getGender())
                 .address(student.getAddress())
+                .district(student.getDistrict())
+                .province(student.getProvince())
+                .academicStream(student.getAcademicStream())
+                .guardianName(student.getGuardianName())
+                .guardianPhone(student.getGuardianPhone())
                 .enrollmentDate(student.getEnrollmentDate())
                 .courseIds(courseIds)
                 .courses(courseDTOs)

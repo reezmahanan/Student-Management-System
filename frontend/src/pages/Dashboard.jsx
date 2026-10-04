@@ -25,6 +25,7 @@ import GradeIcon from '@mui/icons-material/Grade';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { useNavigate } from 'react-router-dom';
 import {
   BarChart,
@@ -35,13 +36,9 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
 } from 'recharts';
 import { getDashboardStats } from '../api/dashboardApi';
-
-const PIE_COLORS = ['#1976d2', '#2e7d32', '#ed6c02', '#d32f2f'];
+import { downloadStudentsPdf } from '../api/analyticsApi';
 
 function StatCard({ title, value, subtitle, icon, color, loading }) {
   return (
@@ -99,9 +96,9 @@ export default function Dashboard() {
 
   const barData = [
     { name: 'Enrolled', count: stats?.totalStudents || 3 },
-    { name: 'Courses', count: stats?.totalCourses || 3 },
-    { name: 'Course Seats', count: stats?.totalEnrollments || 6 },
-    { name: 'At Risk', count: stats?.atRiskStudentsCount || 0 },
+    { name: 'Subjects', count: stats?.totalCourses || 3 },
+    { name: 'Allocations', count: stats?.totalEnrollments || 6 },
+    { name: 'Needs Attention', count: stats?.atRiskStudentsCount || 0 },
   ];
 
   return (
@@ -109,17 +106,27 @@ export default function Dashboard() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <div>
           <Typography variant="h4" fontWeight={700}>
-            Academic Intelligence Dashboard
+            Sri Lanka Academic Intelligence Dashboard
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Real-time institutional metrics, performance analytics, and early-warning alerts
+            Ministry of Education • Institutional Performance, G.C.E. Advanced Level Analytics & Early Intervention
           </Typography>
         </div>
+
+        <Button
+          variant="contained"
+          color="error"
+          startIcon={<PictureAsPdfIcon />}
+          onClick={downloadStudentsPdf}
+          sx={{ bgcolor: '#d32f2f' }}
+        >
+          Export Registry PDF
+        </Button>
       </Box>
 
       {error && (
         <Alert severity="warning" sx={{ mb: 3 }}>
-          {error} (Make sure your backend is running on port 8080)
+          {error} (Backend server status: check port 8080)
         </Alert>
       )}
 
@@ -127,19 +134,19 @@ export default function Dashboard() {
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            title="Total Students"
+            title="Total Registered Students"
             value={stats?.totalStudents}
-            subtitle="Registered active students"
+            subtitle="Verified National Registry"
             icon={<PeopleIcon />}
-            color="#1976d2"
+            color="#0d47a1"
             loading={loading}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            title="Active Courses"
+            title="Curriculum Subjects"
             value={stats?.totalCourses}
-            subtitle={`${stats?.totalEnrollments || 0} total enrollments`}
+            subtitle={`${stats?.totalEnrollments || 0} active subject allocations`}
             icon={<MenuBookIcon />}
             color="#0288d1"
             loading={loading}
@@ -147,9 +154,9 @@ export default function Dashboard() {
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            title="Overall Attendance"
+            title="Term Attendance Rate"
             value={stats ? `${stats.overallAttendanceRate}%` : null}
-            subtitle="Campus-wide average"
+            subtitle="Target threshold: ≥ 80%"
             icon={<HowToRegIcon />}
             color="#2e7d32"
             loading={loading}
@@ -157,9 +164,9 @@ export default function Dashboard() {
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            title="Institutional GPA"
+            title="Institutional Average GPA"
             value={stats?.overallAverageGpa}
-            subtitle="Scale 0.0 - 4.0"
+            subtitle="Standard 4.0 Scale"
             icon={<GradeIcon />}
             color="#7b1fa2"
             loading={loading}
@@ -174,12 +181,12 @@ export default function Dashboard() {
           icon={<WarningAmberIcon fontSize="inherit" />}
           action={
             <Button color="inherit" size="small" onClick={() => navigate('/advisor')}>
-              View Recommendations
+              Review Advisor Insights
             </Button>
           }
           sx={{ mb: 3, borderRadius: 2 }}
         >
-          <strong>AI Academic Warning:</strong> {stats.atRiskStudents.length} student(s) identified with low attendance or academic performance below threshold.
+          <strong>Student Welfare Alert:</strong> {stats.atRiskStudents.length} student(s) identified with attendance under 75% or test marks requiring remedial intervention.
         </Alert>
       )}
 
@@ -189,10 +196,10 @@ export default function Dashboard() {
           <Card sx={{ height: '100%', borderRadius: 2 }}>
             <CardContent>
               <Typography variant="h6" fontWeight={600} gutterBottom>
-                Enrollment & Capacity Breakdown
+                Academic Stream & Capacity Overview
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                Institutional distribution across key student management metrics
+                Institutional student distribution across core educational parameters
               </Typography>
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={barData} margin={{ top: 10, right: 30, left: 0, bottom: 5 }}>
@@ -200,7 +207,7 @@ export default function Dashboard() {
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="count" fill="#1976d2" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="count" fill="#0d47a1" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
@@ -211,26 +218,26 @@ export default function Dashboard() {
           <Card sx={{ height: '100%', borderRadius: 2 }}>
             <CardContent>
               <Typography variant="h6" fontWeight={600} gutterBottom>
-                Financial & Tuition Status
+                Institutional Dues & Fees (LKR)
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                Collected vs. Pending Dues
+                Term Tuition & Facility Fees
               </Typography>
               <Box sx={{ mt: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <Box sx={{ p: 2, bgcolor: '#e8f5e9', borderRadius: 2 }}>
                   <Typography variant="caption" color="success.dark" fontWeight={600}>
-                    COLLECTED FEES
+                    TOTAL COLLECTED FEES (LKR)
                   </Typography>
                   <Typography variant="h5" fontWeight={700} color="success.dark">
-                    ${stats?.totalFeesCollected?.toLocaleString() || '0.00'}
+                    Rs. {stats?.totalFeesCollected?.toLocaleString() || '0.00'}
                   </Typography>
                 </Box>
                 <Box sx={{ p: 2, bgcolor: '#fff3e0', borderRadius: 2 }}>
                   <Typography variant="caption" color="warning.dark" fontWeight={600}>
-                    PENDING INVOICES
+                    PENDING TERM DUES (LKR)
                   </Typography>
                   <Typography variant="h5" fontWeight={700} color="warning.dark">
-                    ${stats?.pendingFees?.toLocaleString() || '0.00'}
+                    Rs. {stats?.pendingFees?.toLocaleString() || '0.00'}
                   </Typography>
                 </Box>
                 <Button
@@ -240,7 +247,7 @@ export default function Dashboard() {
                   onClick={() => navigate('/fees')}
                   sx={{ mt: 1 }}
                 >
-                  Manage Invoices
+                  Manage Student Invoices
                 </Button>
               </Box>
             </CardContent>
@@ -256,17 +263,17 @@ export default function Dashboard() {
               Recently Enrolled Students
             </Typography>
             <Button size="small" onClick={() => navigate('/students')}>
-              View All
+              View Full Registry
             </Button>
           </Box>
           <TableContainer>
             <Table size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ fontWeight: 600 }}>ID</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Admission No</TableCell>
                   <TableCell sx={{ fontWeight: 600 }}>Student Name</TableCell>
-                  <TableCell sx={{ fontWeight: 600 }}>Email</TableCell>
-                  <TableCell sx={{ fontWeight: 600 }}>Enrolled Courses</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>District</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Stream / Grade</TableCell>
                   <TableCell sx={{ fontWeight: 600 }}>Enrollment Date</TableCell>
                 </TableRow>
               </TableHead>
@@ -274,13 +281,15 @@ export default function Dashboard() {
                 {stats?.recentStudents?.length > 0 ? (
                   stats.recentStudents.map((s) => (
                     <TableRow key={s.id} hover>
-                      <TableCell>{s.id}</TableCell>
-                      <TableCell sx={{ fontWeight: 500 }}>
-                        {s.firstName} {s.lastName}
+                      <TableCell sx={{ fontWeight: 700, color: 'primary.dark' }}>
+                        {s.admissionNo || `ST/2026/${s.id}`}
                       </TableCell>
-                      <TableCell>{s.email}</TableCell>
+                      <TableCell sx={{ fontWeight: 500 }}>
+                        {s.fullNameWithInitials || `${s.firstName} ${s.lastName}`}
+                      </TableCell>
+                      <TableCell>{s.district || 'Colombo'}</TableCell>
                       <TableCell>
-                        <Chip label={`${s.courses?.length || 0} Courses`} size="small" variant="outlined" />
+                        <Chip label={s.academicStream || 'A/L Physical Science'} size="small" variant="outlined" />
                       </TableCell>
                       <TableCell>{s.enrollmentDate || '—'}</TableCell>
                     </TableRow>
@@ -288,7 +297,7 @@ export default function Dashboard() {
                 ) : (
                   <TableRow>
                     <TableCell colSpan={5} align="center" sx={{ py: 3, color: 'text.secondary' }}>
-                      No recent students found.
+                      No recent students found in the registry.
                     </TableCell>
                   </TableRow>
                 )}

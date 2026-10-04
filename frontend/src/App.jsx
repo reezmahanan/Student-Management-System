@@ -10,6 +10,7 @@ import Grades from './pages/Grades';
 import Fees from './pages/Fees';
 import Advisor from './pages/Advisor';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import { AuthProvider } from './context/AuthContext';
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route element={<Layout />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/students" element={<Students />} />

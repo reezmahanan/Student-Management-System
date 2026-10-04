@@ -112,6 +112,20 @@ export default function Login() {
             </Button>
           </form>
 
+          <Box sx={{ textAlign: 'center', mt: 2 }}>
+            <Typography variant="body2" color="text.secondary">
+              Don't have an account?{' '}
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => navigate('/register')}
+                sx={{ fontWeight: 700, p: 0, minWidth: 'auto', textTransform: 'none' }}
+              >
+                Register here
+              </Button>
+            </Typography>
+          </Box>
+
           <Divider sx={{ my: 3 }}>
             <Typography variant="caption" color="text.secondary">
               QUICK DEMO LOGINS

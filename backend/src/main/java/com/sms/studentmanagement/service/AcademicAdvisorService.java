@@ -8,5 +8,6 @@ import java.util.List;
 public interface AcademicAdvisorService {
     List<DashboardStatsDTO.AtRiskStudentDTO> assessAtRiskStudents();
     ByteArrayInputStream exportStudentsToExcel();
-    ByteArrayInputStream exportStudentsToCsv();
+    ByteArrayInputStream exportStudentsToPdf();
+    ByteArrayInputStream generateStudentTranscriptPdf(Long studentId);
 }

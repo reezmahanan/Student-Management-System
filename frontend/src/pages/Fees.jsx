@@ -41,6 +41,17 @@ const STATUS_COLOR_MAP = {
   CANCELLED: 'default',
 };
 
+const SRI_LANKAN_FEE_TYPES = [
+  'Term 1 - Tuition & Academic Facilities Fee',
+  'Term 2 - Tuition & Academic Facilities Fee',
+  'Term 3 - Tuition & Academic Facilities Fee',
+  'Science / Computer Laboratory Dues',
+  'School Development Society (SDS) Fund',
+  'Sports & Extra-Curricular Activity Levy',
+  'G.C.E. Advanced Level Examination Dues',
+  'Library & Digital Resource Maintenance'
+];
+
 export default function Fees() {
   const [fees, setFees] = useState([]);
   const [students, setStudents] = useState([]);
@@ -51,8 +62,8 @@ export default function Fees() {
 
   // Form states
   const [studentId, setStudentId] = useState('');
-  const [title, setTitle] = useState('Tuition Fee - Semester 1');
-  const [amount, setAmount] = useState('1200.00');
+  const [title, setTitle] = useState(SRI_LANKAN_FEE_TYPES[0]);
+  const [amount, setAmount] = useState('15000.00'); // LKR
   const [dueDate, setDueDate] = useState(new Date(Date.now() + 30 * 86400000).toISOString().substring(0, 10));
   const [notes, setNotes] = useState('');
 
@@ -88,18 +99,18 @@ export default function Fees() {
         notes,
       });
 
-      setSuccess('Invoice created successfully!');
+      setSuccess('Fee invoice issued successfully!');
       setDialogOpen(false);
       loadData();
     } catch {
-      setError('Failed to create invoice.');
+      setError('Failed to create fee invoice.');
     }
   };
 
   const handlePay = async (feeId) => {
     try {
-      await markFeeAsPaid(feeId, 'ONLINE_CARD');
-      setSuccess('Payment recorded successfully!');
+      await markFeeAsPaid(feeId, 'BANK_TRANSFER / LANKA_PAY');
+      setSuccess('Payment confirmed and receipt generated!');
       loadData();
     } catch {
       setError('Failed to record payment.');
@@ -128,10 +139,10 @@ export default function Fees() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <div>
           <Typography variant="h4" fontWeight={700}>
-            Fee & Tuition Management
+            School Fees & Term Dues (LKR)
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Invoicing, online payment collection, and institutional dues tracking
+            Tuition invoices, School Development Society (SDS) dues, and bank payment reconciliation
           </Typography>
         </div>
 
@@ -141,23 +152,23 @@ export default function Fees() {
           onClick={() => setDialogOpen(true)}
           disabled={students.length === 0}
         >
-          Create Invoice
+          Issue Fee Invoice
         </Button>
       </Box>
 
       {success && <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSuccess('')}>{success}</Alert>}
       {error && <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError('')}>{error}</Alert>}
 
-      {/* KPI Cards */}
+      {/* KPI Cards in LKR */}
       <Grid container spacing={2.5} sx={{ mb: 3 }}>
         <Grid item xs={12} sm={6} md={4}>
           <Card sx={{ borderRadius: 2, bgcolor: '#e8f5e9' }}>
             <CardContent>
               <Typography variant="caption" color="success.dark" fontWeight={600}>
-                TOTAL COLLECTED
+                TOTAL COLLECTED REVENUE (LKR)
               </Typography>
               <Typography variant="h4" fontWeight={700} color="success.dark">
-                ${totalCollected.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                Rs. {totalCollected.toLocaleString(undefined, { minimumFractionDigits: 2 })}
               </Typography>
             </CardContent>
           </Card>
@@ -166,10 +177,10 @@ export default function Fees() {
           <Card sx={{ borderRadius: 2, bgcolor: '#fff3e0' }}>
             <CardContent>
               <Typography variant="caption" color="warning.dark" fontWeight={600}>
-                TOTAL PENDING / OVERDUE
+                PENDING TERM DUES (LKR)
               </Typography>
               <Typography variant="h4" fontWeight={700} color="warning.dark">
-                ${totalPending.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                Rs. {totalPending.toLocaleString(undefined, { minimumFractionDigits: 2 })}
               </Typography>
             </CardContent>
           </Card>
@@ -178,7 +189,7 @@ export default function Fees() {
           <Card sx={{ borderRadius: 2, bgcolor: '#e3f2fd' }}>
             <CardContent>
               <Typography variant="caption" color="primary.dark" fontWeight={600}>
-                TOTAL INVOICES ISSUED
+                INVOICES RECORDED
               </Typography>
               <Typography variant="h4" fontWeight={700} color="primary.dark">
                 {fees.length}
@@ -191,12 +202,12 @@ export default function Fees() {
       {/* Fees Table */}
       <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
         <Table>
-          <TableHead sx={{ bgcolor: 'primary.main' }}>
+          <TableHead sx={{ bgcolor: '#0d47a1' }}>
             <TableRow>
-              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Invoice #</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Invoice Ref</TableCell>
               <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Student</TableCell>
-              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Description</TableCell>
-              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Amount</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Fee Type / Description</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Amount (LKR)</TableCell>
               <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Due Date</TableCell>
               <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Status</TableCell>
               <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Actions</TableCell>
@@ -206,7 +217,7 @@ export default function Fees() {
             {fees.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7} align="center" sx={{ py: 4, color: 'text.secondary' }}>
-                  No fee invoices issued yet. Click "Create Invoice" to start!
+                  No fee invoices issued yet. Click "Issue Fee Invoice" to create one.
                 </TableCell>
               </TableRow>
             ) : (
@@ -215,7 +226,7 @@ export default function Fees() {
                   <TableCell sx={{ fontWeight: 600 }}>{f.invoiceNumber}</TableCell>
                   <TableCell>{f.studentName}</TableCell>
                   <TableCell>{f.title}</TableCell>
-                  <TableCell sx={{ fontWeight: 700 }}>${parseFloat(f.amount).toFixed(2)}</TableCell>
+                  <TableCell sx={{ fontWeight: 700 }}>Rs. {parseFloat(f.amount).toFixed(2)}</TableCell>
                   <TableCell>{f.dueDate}</TableCell>
                   <TableCell>
                     <Chip
@@ -234,7 +245,7 @@ export default function Fees() {
                         onClick={() => handlePay(f.id)}
                         sx={{ mr: 1 }}
                       >
-                        Mark Paid
+                        Confirm Payment
                       </Button>
                     )}
                     <Tooltip title="Delete">
@@ -252,7 +263,7 @@ export default function Fees() {
 
       {/* Create Invoice Dialog */}
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Issue New Student Invoice</DialogTitle>
+        <DialogTitle>Issue Student Fee Invoice</DialogTitle>
         <DialogContent sx={{ pt: 2 }}>
           <Grid container spacing={2} sx={{ mt: 0.5 }}>
             <Grid item xs={12}>
@@ -261,7 +272,7 @@ export default function Fees() {
                 <Select value={studentId} label="Select Student" onChange={(e) => setStudentId(e.target.value)}>
                   {students.map((s) => (
                     <MenuItem key={s.id} value={s.id}>
-                      {s.firstName} {s.lastName} ({s.email})
+                      {s.admissionNo ? `${s.admissionNo} - ` : ''}{s.firstName} {s.lastName} ({s.email})
                     </MenuItem>
                   ))}
                 </Select>
@@ -269,18 +280,21 @@ export default function Fees() {
             </Grid>
 
             <Grid item xs={12} sm={8}>
-              <TextField
-                label="Invoice Title / Description"
-                fullWidth
-                size="small"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
+              <FormControl fullWidth size="small">
+                <InputLabel>Fee Category</InputLabel>
+                <Select value={title} label="Fee Category" onChange={(e) => setTitle(e.target.value)}>
+                  {SRI_LANKAN_FEE_TYPES.map((ft) => (
+                    <MenuItem key={ft} value={ft}>
+                      {ft}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
 
             <Grid item xs={12} sm={4}>
               <TextField
-                label="Amount ($)"
+                label="Amount (Rs.)"
                 type="number"
                 fullWidth
                 size="small"
@@ -303,9 +317,10 @@ export default function Fees() {
 
             <Grid item xs={12}>
               <TextField
-                label="Payment Notes"
+                label="Notes / LankaPay Reference"
                 fullWidth
                 size="small"
+                placeholder="e.g. Bank of Ceylon / Commercial Bank slip number"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
               />

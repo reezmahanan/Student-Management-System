@@ -30,9 +30,11 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import GradeIcon from '@mui/icons-material/Grade';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { getAllStudents } from '../api/studentApi';
 import { getAllCourses } from '../api/courseApi';
 import { getGradesByStudent, recordGrade, deleteGrade, getStudentGPA } from '../api/gradeApi';
+import { downloadStudentTranscriptPdf } from '../api/analyticsApi';
 
 const GRADE_COLOR_MAP = {
   'A+': 'success',
@@ -44,6 +46,16 @@ const GRADE_COLOR_MAP = {
   D: 'warning',
   F: 'error',
 };
+
+const SRI_LANKAN_ASSESSMENTS = [
+  'First Term Test (1 වන වාර විභාගය)',
+  'Mid-Year Term Test (2 වන වාර විභාගය)',
+  'Final Year End Test (3 වන වාර විභාගය)',
+  'G.C.E. A/L Model Exam Paper',
+  'Continuous Practical / Lab Assessment',
+  'Monthly Assignment / Evaluation',
+  'Unit Quiz'
+];
 
 export default function Grades() {
   const [students, setStudents] = useState([]);
@@ -58,10 +70,10 @@ export default function Grades() {
 
   // New Grade Form
   const [courseId, setCourseId] = useState('');
-  const [examType, setExamType] = useState('FINAL');
+  const [examType, setExamType] = useState(SRI_LANKAN_ASSESSMENTS[0]);
   const [score, setScore] = useState('');
   const [maxScore, setMaxScore] = useState(100);
-  const [semester, setSemester] = useState('Fall 2026');
+  const [semester, setSemester] = useState('2026 - Term 1');
   const [feedback, setFeedback] = useState('');
 
   useEffect(() => {
@@ -115,14 +127,13 @@ export default function Grades() {
         feedback,
       });
 
-      setSuccess('Grade recorded successfully!');
+      setSuccess('Term marks and evaluation recorded successfully!');
       setDialogOpen(false);
-      // Reset form
       setScore('');
       setFeedback('');
       loadStudentGrades(selectedStudentId);
     } catch {
-      setError('Failed to record grade.');
+      setError('Failed to record term grade.');
     }
   };
 
@@ -142,24 +153,37 @@ export default function Grades() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <div>
           <Typography variant="h4" fontWeight={700}>
-            Grades & GPA Transcript
+            Term Marks & Academic Performance Transcript
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Continuous assessment, examination scores, and dynamic CGPA calculation
+            Sri Lankan G.C.E. Advanced Level & Secondary term assessments, standardized grading, and GPA
           </Typography>
         </div>
 
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => {
-            if (courses.length > 0) setCourseId(courses[0].id);
-            setDialogOpen(true);
-          }}
-          disabled={!selectedStudentId}
-        >
-          Record Grade
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1.5 }}>
+          {selectedStudentId && (
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<PictureAsPdfIcon />}
+              onClick={() => downloadStudentTranscriptPdf(selectedStudentId)}
+            >
+              Export Transcript (PDF)
+            </Button>
+          )}
+
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => {
+              if (courses.length > 0) setCourseId(courses[0].id);
+              setDialogOpen(true);
+            }}
+            disabled={!selectedStudentId}
+          >
+            Record Term Marks
+          </Button>
+        </Box>
       </Box>
 
       {success && <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSuccess('')}>{success}</Alert>}
@@ -179,7 +203,7 @@ export default function Grades() {
                 >
                   {students.map((s) => (
                     <MenuItem key={s.id} value={s.id}>
-                      {s.firstName} {s.lastName} ({s.email})
+                      {s.admissionNo ? `${s.admissionNo} - ` : ''}{s.firstName} {s.lastName} ({s.academicStream || 'General'})
                     </MenuItem>
                   ))}
                 </Select>
@@ -199,7 +223,15 @@ export default function Grades() {
                   </Box>
                   <Box>
                     <Typography variant="caption" color="text.secondary">
-                      TOTAL EXAMS
+                      NATIONAL ID (NIC)
+                    </Typography>
+                    <Typography variant="body1" fontWeight={600}>
+                      {selectedStudent.nicNo || '—'}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="caption" color="text.secondary">
+                      EVALUATIONS RECORDED
                     </Typography>
                     <Typography variant="h5" fontWeight={700}>
                       {grades.length}
@@ -215,15 +247,15 @@ export default function Grades() {
       {/* Grades Table */}
       <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
         <Table>
-          <TableHead sx={{ bgcolor: 'primary.main' }}>
+          <TableHead sx={{ bgcolor: '#0d47a1' }}>
             <TableRow>
-              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Course</TableCell>
-              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Assessment</TableCell>
-              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Score</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Curriculum Subject</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Assessment Type</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Raw Marks</TableCell>
               <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Percentage</TableCell>
-              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Grade</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Letter Grade</TableCell>
               <TableCell sx={{ color: '#fff', fontWeight: 700 }}>GPA Point</TableCell>
-              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Semester</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Term / Year</TableCell>
               <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -231,7 +263,7 @@ export default function Grades() {
             {grades.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={8} align="center" sx={{ py: 4, color: 'text.secondary' }}>
-                  No grades recorded for this student yet. Click "Record Grade" to add one!
+                  No examination marks recorded for this student yet. Click "Record Term Marks" to add evaluation.
                 </TableCell>
               </TableRow>
             ) : (
@@ -273,13 +305,13 @@ export default function Grades() {
 
       {/* Record Grade Dialog */}
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Record Academic Assessment Grade</DialogTitle>
+        <DialogTitle>Record Term Marks & Assessment</DialogTitle>
         <DialogContent sx={{ pt: 2 }}>
           <Grid container spacing={2} sx={{ mt: 0.5 }}>
             <Grid item xs={12}>
               <FormControl fullWidth size="small">
-                <InputLabel>Course</InputLabel>
-                <Select value={courseId} label="Course" onChange={(e) => setCourseId(e.target.value)}>
+                <InputLabel>Curriculum Subject</InputLabel>
+                <Select value={courseId} label="Curriculum Subject" onChange={(e) => setCourseId(e.target.value)}>
                   {courses.map((c) => (
                     <MenuItem key={c.id} value={c.id}>
                       {c.courseName} ({c.courseCode})
@@ -289,22 +321,22 @@ export default function Grades() {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={7}>
               <FormControl fullWidth size="small">
-                <InputLabel>Assessment Type</InputLabel>
-                <Select value={examType} label="Assessment Type" onChange={(e) => setExamType(e.target.value)}>
-                  <MenuItem value="MIDTERM">Midterm Exam</MenuItem>
-                  <MenuItem value="FINAL">Final Exam</MenuItem>
-                  <MenuItem value="ASSIGNMENT">Assignment</MenuItem>
-                  <MenuItem value="QUIZ">Quiz</MenuItem>
-                  <MenuItem value="PROJECT">Project</MenuItem>
+                <InputLabel>Assessment Category</InputLabel>
+                <Select value={examType} label="Assessment Category" onChange={(e) => setExamType(e.target.value)}>
+                  {SRI_LANKAN_ASSESSMENTS.map((as) => (
+                    <MenuItem key={as} value={as}>
+                      {as}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={5}>
               <TextField
-                label="Semester"
+                label="Academic Term / Year"
                 fullWidth
                 size="small"
                 value={semester}
@@ -314,7 +346,7 @@ export default function Grades() {
 
             <Grid item xs={12} sm={6}>
               <TextField
-                label="Score Obtained"
+                label="Marks Obtained"
                 type="number"
                 fullWidth
                 size="small"
@@ -325,7 +357,7 @@ export default function Grades() {
 
             <Grid item xs={12} sm={6}>
               <TextField
-                label="Maximum Score"
+                label="Total Max Marks"
                 type="number"
                 fullWidth
                 size="small"
@@ -336,11 +368,12 @@ export default function Grades() {
 
             <Grid item xs={12}>
               <TextField
-                label="Feedback / Instructor Notes"
+                label="Subject Teacher Remarks / Observations"
                 fullWidth
                 multiline
                 rows={2}
                 size="small"
+                placeholder="e.g. Good mastery of Pure Mathematics problems; needs improvement in vectors."
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
               />
@@ -350,7 +383,7 @@ export default function Grades() {
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
           <Button variant="contained" onClick={handleAddGrade}>
-            Save Grade
+            Submit Evaluation
           </Button>
         </DialogActions>
       </Dialog>
