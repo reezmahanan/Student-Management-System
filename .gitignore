@@ -11,6 +11,12 @@ frontend/dist/
 frontend/node_modules/
 *.log
 
+### Local Secrets & Configs ###
+*.env
+application-local.properties
+**/application-local.properties
+
+
 ### Eclipse ###
 .apt_generated
 .classpath
