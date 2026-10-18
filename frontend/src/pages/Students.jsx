@@ -132,10 +132,10 @@ export default function Students() {
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
         <div>
           <Typography variant="h4" fontWeight={700}>
-            Sri Lankan Student Directory
+            Student Directory
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Ministry of Education Registry • Student Profiles, NIC & Academic Streams
+            EduNexus • Comprehensive Student Profiles, Enrollment & Records
           </Typography>
         </div>
 

@@ -90,19 +90,19 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public void seedInitialUsersAndDemoData() {
         if (userRepository.count() == 0) {
-            log.info("Seeding initial Sri Lankan admin, teacher, and student users...");
+            log.info("Seeding initial admin, teacher, and student users...");
 
             userRepository.save(User.builder()
                     .username("admin")
-                    .email("admin@sms.edu.lk")
-                    .fullName("Principal / Academic Registrar")
+                    .email("admin@edunexus.edu")
+                    .fullName("Academic Administrator")
                     .password(passwordEncoder.encode("admin123"))
                     .role(Role.ROLE_ADMIN)
                     .build());
 
             userRepository.save(User.builder()
                     .username("teacher")
-                    .email("teacher@sms.edu.lk")
+                    .email("teacher@edunexus.edu")
                     .fullName("Prof. Sunimal Senanayake")
                     .password(passwordEncoder.encode("teacher123"))
                     .role(Role.ROLE_TEACHER)
@@ -110,42 +110,42 @@ public class AuthServiceImpl implements AuthService {
 
             userRepository.save(User.builder()
                     .username("student")
-                    .email("student@sms.edu.lk")
+                    .email("student@edunexus.edu")
                     .fullName("Kasun Bandara")
                     .password(passwordEncoder.encode("student123"))
                     .role(Role.ROLE_STUDENT)
                     .build());
         }
 
-        // Seed Sri Lankan curriculum subjects & courses
+        // Seed curriculum courses & subjects
         if (courseRepository.count() == 0) {
-            log.info("Seeding Sri Lankan curriculum courses & subjects...");
+            log.info("Seeding curriculum courses & subjects...");
             Course cs101 = courseRepository.save(Course.builder()
                     .courseName("Combined Mathematics & Computing")
-                    .courseCode("AL-MATH-01")
+                    .courseCode("MATH-101")
                     .credits(4)
-                    .duration("Year 12 - Term 1")
-                    .description("G.C.E. Advanced Level Physical Science curriculum with pure and applied mathematics.")
+                    .duration("Year 1 - Semester 1")
+                    .description("Core mathematics and computational science curriculum.")
                     .build());
 
             Course web201 = courseRepository.save(Course.builder()
                     .courseName("Information & Communication Technology (ICT)")
-                    .courseCode("AL-ICT-02")
+                    .courseCode("CS-102")
                     .credits(3)
-                    .duration("Year 12 - Term 1")
-                    .description("G.C.E. A/L ICT stream covering software engineering, database systems, and networking.")
+                    .duration("Year 1 - Semester 1")
+                    .description("Computer science fundamentals covering software engineering, database systems, and networking.")
                     .build());
 
             Course phy301 = courseRepository.save(Course.builder()
                     .courseName("Physics & Electronics Laboratory")
-                    .courseCode("AL-PHY-03")
+                    .courseCode("PHY-103")
                     .credits(4)
-                    .duration("Year 12 - Term 1")
+                    .duration("Year 1 - Semester 1")
                     .description("Theoretical mechanics, electromagnetism, modern physics, and laboratory experiments.")
                     .build());
 
             if (studentRepository.count() == 0) {
-                log.info("Seeding Sri Lankan student directory demo records...");
+                log.info("Seeding student directory demo records...");
                 Student s1 = Student.builder()
                         .admissionNo("ST/2026/001")
                         .firstName("Kasun")

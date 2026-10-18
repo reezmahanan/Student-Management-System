@@ -106,10 +106,10 @@ export default function Dashboard() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <div>
           <Typography variant="h4" fontWeight={700}>
-            Sri Lanka Academic Intelligence Dashboard
+            Academic Intelligence Dashboard
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Ministry of Education • Institutional Performance, G.C.E. Advanced Level Analytics & Early Intervention
+            EduNexus • Institutional Performance, Student Analytics & Early Intervention
           </Typography>
         </div>
 
@@ -136,7 +136,7 @@ export default function Dashboard() {
           <StatCard
             title="Total Registered Students"
             value={stats?.totalStudents}
-            subtitle="Verified National Registry"
+            subtitle="Active Student Directory"
             icon={<PeopleIcon />}
             color="#0d47a1"
             loading={loading}
@@ -218,15 +218,15 @@ export default function Dashboard() {
           <Card sx={{ height: '100%', borderRadius: 2 }}>
             <CardContent>
               <Typography variant="h6" fontWeight={600} gutterBottom>
-                Institutional Dues & Fees (LKR)
+                Tuition & Fees Overview
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                Term Tuition & Facility Fees
+                Academic Tuition & Facility Dues
               </Typography>
               <Box sx={{ mt: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <Box sx={{ p: 2, bgcolor: '#e8f5e9', borderRadius: 2 }}>
                   <Typography variant="caption" color="success.dark" fontWeight={600}>
-                    TOTAL COLLECTED FEES (LKR)
+                    TOTAL COLLECTED FEES
                   </Typography>
                   <Typography variant="h5" fontWeight={700} color="success.dark">
                     Rs. {stats?.totalFeesCollected?.toLocaleString() || '0.00'}
@@ -234,7 +234,7 @@ export default function Dashboard() {
                 </Box>
                 <Box sx={{ p: 2, bgcolor: '#fff3e0', borderRadius: 2 }}>
                   <Typography variant="caption" color="warning.dark" fontWeight={600}>
-                    PENDING TERM DUES (LKR)
+                    PENDING DUES
                   </Typography>
                   <Typography variant="h5" fontWeight={700} color="warning.dark">
                     Rs. {stats?.pendingFees?.toLocaleString() || '0.00'}

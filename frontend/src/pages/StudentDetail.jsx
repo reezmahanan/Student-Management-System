@@ -187,13 +187,13 @@ export default function StudentDetail() {
               <Divider sx={{ mb: 2 }} />
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                  <INFO_FIELD label="National ID (NIC)" value={student.nicNo} />
+                  <INFO_FIELD label="National ID / ID No" value={student.nicNo} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <INFO_FIELD label="District" value={student.district} />
+                  <INFO_FIELD label="District / Region" value={student.district} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <INFO_FIELD label="Province" value={student.province} />
+                  <INFO_FIELD label="Province / State" value={student.province} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <INFO_FIELD label="Contact Phone" value={student.phone} />

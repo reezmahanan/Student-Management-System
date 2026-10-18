@@ -81,7 +81,7 @@ public class AcademicAdvisorServiceImpl implements AcademicAdvisorService {
     @Override
     public ByteArrayInputStream exportStudentsToExcel() {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Sheet sheet = workbook.createSheet("Sri Lankan Student Directory");
+            Sheet sheet = workbook.createSheet("EduNexus Student Directory");
 
             org.apache.poi.ss.usermodel.Font headerFont = workbook.createFont();
             headerFont.setBold(true);
@@ -146,11 +146,11 @@ public class AcademicAdvisorServiceImpl implements AcademicAdvisorService {
             Font tableHeaderFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, Color.WHITE);
             Font cellFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Color.BLACK);
 
-            Paragraph title = new Paragraph("MINISTRY OF EDUCATION — SRI LANKA", titleFont);
+            Paragraph title = new Paragraph("EDUNEXUS — STUDENT MANAGEMENT SYSTEM", titleFont);
             title.setAlignment(Element.ALIGN_CENTER);
             document.add(title);
 
-            Paragraph institute = new Paragraph("National Student Information Management System (SIS) • Official Registry", subFont);
+            Paragraph institute = new Paragraph("Official Student Directory Registry & Institutional Records", subFont);
             institute.setAlignment(Element.ALIGN_CENTER);
             institute.setSpacingAfter(15);
             document.add(institute);
@@ -224,7 +224,7 @@ public class AcademicAdvisorServiceImpl implements AcademicAdvisorService {
             Font textFont = FontFactory.getFont(FontFactory.HELVETICA, 10, Color.BLACK);
             Font boldFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, Color.BLACK);
 
-            Paragraph p1 = new Paragraph("GOVERNMENT OF SRI LANKA — MINISTRY OF EDUCATION", titleFont);
+            Paragraph p1 = new Paragraph("EDUNEXUS ACADEMIC SYSTEM", titleFont);
             p1.setAlignment(Element.ALIGN_CENTER);
             document.add(p1);
 

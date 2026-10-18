@@ -24,11 +24,11 @@ public class ExportController {
 
     @GetMapping("/students/excel")
     public ResponseEntity<InputStreamResource> exportStudentsExcel() {
-        log.info("Exporting Sri Lankan students directory to Excel...");
+        log.info("Exporting students directory to Excel...");
         ByteArrayInputStream in = advisorService.exportStudentsToExcel();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=srilanka_students_registry.xlsx");
+        headers.add("Content-Disposition", "attachment; filename=edunexus_students_registry.xlsx");
 
         return ResponseEntity.ok()
                 .headers(headers)
@@ -38,11 +38,11 @@ public class ExportController {
 
     @GetMapping("/students/pdf")
     public ResponseEntity<InputStreamResource> exportStudentsPdf() {
-        log.info("Generating Ministry of Education Sri Lanka Student Registry PDF...");
+        log.info("Generating EduNexus Student Registry PDF...");
         ByteArrayInputStream in = advisorService.exportStudentsToPdf();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=srilanka_students_official_registry.pdf");
+        headers.add("Content-Disposition", "attachment; filename=edunexus_students_registry.pdf");
 
         return ResponseEntity.ok()
                 .headers(headers)
@@ -52,11 +52,11 @@ public class ExportController {
 
     @GetMapping("/student/{studentId}/transcript-pdf")
     public ResponseEntity<InputStreamResource> exportStudentTranscriptPdf(@PathVariable Long studentId) {
-        log.info("Generating Sri Lankan Official Academic Transcript PDF for student: {}", studentId);
+        log.info("Generating EduNexus Academic Transcript PDF for student: {}", studentId);
         ByteArrayInputStream in = advisorService.generateStudentTranscriptPdf(studentId);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=student_" + studentId + "_transcript.pdf");
+        headers.add("Content-Disposition", "attachment; filename=edunexus_student_" + studentId + "_transcript.pdf");
 
         return ResponseEntity.ok()
                 .headers(headers)

@@ -16,28 +16,24 @@ import {
   Divider,
 } from '@mui/material';
 
-const SRI_LANKAN_DISTRICTS = [
-  'Colombo', 'Gampaha', 'Kalutara', 'Kandy', 'Matale', 'Nuwara Eliya',
-  'Galle', 'Matara', 'Hambantota', 'Jaffna', 'Kilinochchi', 'Mannar',
-  'Vavuniya', 'Mullaitivu', 'Batticaloa', 'Ampara', 'Trincomalee',
-  'Kurunegala', 'Puttalam', 'Anuradhapura', 'Polonnaruwa', 'Badulla',
-  'Monaragala', 'Ratnapura', 'Kegalle'
+const DISTRICTS_REGIONS = [
+  'Central District', 'North District', 'South District', 'East District', 'West District',
+  'Metropolitan Area', 'Colombo', 'Kandy', 'Galle', 'Jaffna', 'Gampaha', 'Kurunegala'
 ];
 
-const SRI_LANKAN_PROVINCES = [
+const PROVINCES_STATES = [
   'Western Province', 'Central Province', 'Southern Province', 'Northern Province',
   'Eastern Province', 'North Western Province', 'North Central Province', 'Uva Province', 'Sabaragamuwa Province'
 ];
 
-const SRI_LANKAN_STREAMS = [
-  'G.C.E. A/L Physical Science (Combined Maths)',
-  'G.C.E. A/L Biological Science (Bio Maths/Agri)',
-  'G.C.E. A/L Commerce & Accounting',
-  'G.C.E. A/L Technology (Engineering / Bio Tech)',
-  'G.C.E. A/L Arts & Humanities',
-  'G.C.E. O/L Secondary (Grades 6-11)',
-  'BSc (Hons) Information Technology',
-  'BSc (Hons) Software Engineering'
+const ACADEMIC_STREAMS = [
+  'Computer Science & Information Technology',
+  'Physical Science & Engineering',
+  'Biological & Health Sciences',
+  'Business Administration & Finance',
+  'Arts, Humanities & Social Sciences',
+  'Secondary School Education',
+  'General Academic Studies'
 ];
 
 const EMPTY_FORM = {
@@ -127,10 +123,10 @@ export default function StudentForm({ open, student, onSave, onClose }) {
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>
         <Typography variant="h6" fontWeight={700}>
-          {student ? 'Edit Sri Lankan Student Record' : 'Register New Student (Sri Lankan SIS)'}
+          {student ? 'Edit Student Record' : 'Register New Student'}
         </Typography>
         <Typography variant="caption" color="text.secondary">
-          National Education Registry Standards & Identity Verification
+          EduNexus Student Directory & Profile Management
         </Typography>
       </DialogTitle>
       <DialogContent dividers>
@@ -202,7 +198,7 @@ export default function StudentForm({ open, student, onSave, onClose }) {
                 onChange={handleChange}
                 label="Academic Stream / Grade"
               >
-                {SRI_LANKAN_STREAMS.map((st) => (
+                {ACADEMIC_STREAMS.map((st) => (
                   <MenuItem key={st} value={st}>
                     {st}
                   </MenuItem>
@@ -275,9 +271,9 @@ export default function StudentForm({ open, student, onSave, onClose }) {
           </Grid>
           <Grid item xs={12} sm={4}>
             <FormControl fullWidth>
-              <InputLabel>Sri Lankan District</InputLabel>
-              <Select name="district" value={form.district} onChange={handleChange} label="Sri Lankan District">
-                {SRI_LANKAN_DISTRICTS.map((d) => (
+              <InputLabel>District / Region</InputLabel>
+              <Select name="district" value={form.district} onChange={handleChange} label="District / Region">
+                {DISTRICTS_REGIONS.map((d) => (
                   <MenuItem key={d} value={d}>
                     {d}
                   </MenuItem>
@@ -287,9 +283,9 @@ export default function StudentForm({ open, student, onSave, onClose }) {
           </Grid>
           <Grid item xs={12} sm={4}>
             <FormControl fullWidth>
-              <InputLabel>Province</InputLabel>
-              <Select name="province" value={form.province} onChange={handleChange} label="Province">
-                {SRI_LANKAN_PROVINCES.map((p) => (
+              <InputLabel>Province / State</InputLabel>
+              <Select name="province" value={form.province} onChange={handleChange} label="Province / State">
+                {PROVINCES_STATES.map((p) => (
                   <MenuItem key={p} value={p}>
                     {p}
                   </MenuItem>

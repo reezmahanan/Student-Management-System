@@ -20,10 +20,10 @@ import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 
-const SRI_LANKAN_ROLES = [
-  { value: 'ROLE_STUDENT', label: 'Student (ශිෂ්‍ය)' },
-  { value: 'ROLE_TEACHER', label: 'Teacher / Lecturer (ගුරුභවතුන්)' },
-  { value: 'ROLE_ADMIN', label: 'School Administrator / Principal' },
+const ROLES = [
+  { value: 'ROLE_STUDENT', label: 'Student' },
+  { value: 'ROLE_TEACHER', label: 'Teacher / Faculty' },
+  { value: 'ROLE_ADMIN', label: 'Administrator' },
 ];
 
 export default function Register() {
@@ -108,7 +108,7 @@ export default function Register() {
               Create an Account
             </Typography>
             <Typography variant="body2" color="text.secondary" align="center">
-              Sri Lanka Student Information System (SIS) • User Self-Registration
+              EduNexus Student Management System • User Registration
             </Typography>
           </Box>
 
@@ -118,9 +118,9 @@ export default function Register() {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  label="Full Name (with initials)"
+                  label="Full Name"
                   name="fullName"
-                  placeholder="e.g. K.M. Kasun Bandara"
+                  placeholder="e.g. John Doe"
                   fullWidth
                   required
                   value={formData.fullName}
@@ -132,7 +132,7 @@ export default function Register() {
                 <TextField
                   label="Username"
                   name="username"
-                  placeholder="e.g. kasun2026"
+                  placeholder="e.g. jdoe"
                   fullWidth
                   required
                   value={formData.username}
@@ -145,7 +145,7 @@ export default function Register() {
                   label="Email Address"
                   name="email"
                   type="email"
-                  placeholder="e.g. kasun@sms.edu.lk"
+                  placeholder="e.g. john@edunexus.edu"
                   fullWidth
                   required
                   value={formData.email}
@@ -162,7 +162,7 @@ export default function Register() {
                     onChange={handleChange}
                     label="Account Role"
                   >
-                    {SRI_LANKAN_ROLES.map((r) => (
+                    {ROLES.map((r) => (
                       <MenuItem key={r.value} value={r.value}>
                         {r.label}
                       </MenuItem>

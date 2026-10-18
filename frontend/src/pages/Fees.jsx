@@ -41,14 +41,13 @@ const STATUS_COLOR_MAP = {
   CANCELLED: 'default',
 };
 
-const SRI_LANKAN_FEE_TYPES = [
-  'Term 1 - Tuition & Academic Facilities Fee',
-  'Term 2 - Tuition & Academic Facilities Fee',
-  'Term 3 - Tuition & Academic Facilities Fee',
-  'Science / Computer Laboratory Dues',
-  'School Development Society (SDS) Fund',
-  'Sports & Extra-Curricular Activity Levy',
-  'G.C.E. Advanced Level Examination Dues',
+const FEE_CATEGORIES = [
+  'Semester 1 - Academic Tuition Fee',
+  'Semester 2 - Academic Tuition Fee',
+  'Science & Technology Laboratory Fee',
+  'Campus Development & Facility Fund',
+  'Sports & Student Activities Levy',
+  'Examination & Certification Dues',
   'Library & Digital Resource Maintenance'
 ];
 
@@ -62,8 +61,8 @@ export default function Fees() {
 
   // Form states
   const [studentId, setStudentId] = useState('');
-  const [title, setTitle] = useState(SRI_LANKAN_FEE_TYPES[0]);
-  const [amount, setAmount] = useState('15000.00'); // LKR
+  const [title, setTitle] = useState(FEE_CATEGORIES[0]);
+  const [amount, setAmount] = useState('15000.00');
   const [dueDate, setDueDate] = useState(new Date(Date.now() + 30 * 86400000).toISOString().substring(0, 10));
   const [notes, setNotes] = useState('');
 
@@ -109,7 +108,7 @@ export default function Fees() {
 
   const handlePay = async (feeId) => {
     try {
-      await markFeeAsPaid(feeId, 'BANK_TRANSFER / LANKA_PAY');
+      await markFeeAsPaid(feeId, 'ONLINE_TRANSFER / CARD');
       setSuccess('Payment confirmed and receipt generated!');
       loadData();
     } catch {
@@ -139,10 +138,10 @@ export default function Fees() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <div>
           <Typography variant="h4" fontWeight={700}>
-            School Fees & Term Dues (LKR)
+            Fees & Invoice Management
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Tuition invoices, School Development Society (SDS) dues, and bank payment reconciliation
+            Tuition invoices, departmental fees, and payment reconciliation
           </Typography>
         </div>
 
@@ -159,13 +158,13 @@ export default function Fees() {
       {success && <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSuccess('')}>{success}</Alert>}
       {error && <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError('')}>{error}</Alert>}
 
-      {/* KPI Cards in LKR */}
+      {/* KPI Cards */}
       <Grid container spacing={2.5} sx={{ mb: 3 }}>
         <Grid item xs={12} sm={6} md={4}>
           <Card sx={{ borderRadius: 2, bgcolor: '#e8f5e9' }}>
             <CardContent>
               <Typography variant="caption" color="success.dark" fontWeight={600}>
-                TOTAL COLLECTED REVENUE (LKR)
+                TOTAL COLLECTED REVENUE
               </Typography>
               <Typography variant="h4" fontWeight={700} color="success.dark">
                 Rs. {totalCollected.toLocaleString(undefined, { minimumFractionDigits: 2 })}
@@ -177,7 +176,7 @@ export default function Fees() {
           <Card sx={{ borderRadius: 2, bgcolor: '#fff3e0' }}>
             <CardContent>
               <Typography variant="caption" color="warning.dark" fontWeight={600}>
-                PENDING TERM DUES (LKR)
+                PENDING DUES
               </Typography>
               <Typography variant="h4" fontWeight={700} color="warning.dark">
                 Rs. {totalPending.toLocaleString(undefined, { minimumFractionDigits: 2 })}
@@ -283,7 +282,7 @@ export default function Fees() {
               <FormControl fullWidth size="small">
                 <InputLabel>Fee Category</InputLabel>
                 <Select value={title} label="Fee Category" onChange={(e) => setTitle(e.target.value)}>
-                  {SRI_LANKAN_FEE_TYPES.map((ft) => (
+                  {FEE_CATEGORIES.map((ft) => (
                     <MenuItem key={ft} value={ft}>
                       {ft}
                     </MenuItem>

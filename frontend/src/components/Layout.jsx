@@ -36,11 +36,11 @@ const DRAWER_WIDTH = 260;
 
 const navItems = [
   { label: 'Dashboard', path: '/', icon: <DashboardIcon /> },
-  { label: 'Student Directory', path: '/students', icon: <PeopleIcon /> },
-  { label: 'Subjects & Streams', path: '/courses', icon: <MenuBookIcon /> },
-  { label: 'Daily Attendance', path: '/attendance', icon: <HowToRegIcon /> },
-  { label: 'Term Marks & GPA', path: '/grades', icon: <GradeIcon /> },
-  { label: 'School Fees & Dues', path: '/fees', icon: <PaymentIcon /> },
+  { label: 'Students', path: '/students', icon: <PeopleIcon /> },
+  { label: 'Courses', path: '/courses', icon: <MenuBookIcon /> },
+  { label: 'Attendance', path: '/attendance', icon: <HowToRegIcon /> },
+  { label: 'Grades & GPA', path: '/grades', icon: <GradeIcon /> },
+  { label: 'Fees & Invoices', path: '/fees', icon: <PaymentIcon /> },
   { label: 'AI Academic Advisor', path: '/advisor', icon: <WarningAmberIcon /> },
 ];
 
@@ -67,11 +67,11 @@ export default function Layout() {
         <Toolbar>
           <SchoolIcon sx={{ mr: 1.5, fontSize: 32, color: '#ffb300' }} />
           <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 700, letterSpacing: 0.5 }}>
-              SL-EduNexus SMS <span style={{ fontSize: '0.8rem', opacity: 0.85, fontWeight: 400 }}>• Sri Lanka Academic Suite</span>
+            <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 800, letterSpacing: 1.2 }}>
+              EDUNEXUS
             </Typography>
-            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)', display: { xs: 'none', sm: 'block' } }}>
-              Ministry of Education Framework • National SIS Portal
+            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.75)', display: { xs: 'none', sm: 'block' } }}>
+              Student Management System
             </Typography>
           </Box>
 
@@ -192,11 +192,11 @@ export default function Layout() {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
               <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#4caf50' }} />
               <Typography variant="caption" sx={{ color: '#81c784', fontWeight: 600 }}>
-                Sri Lanka Central Zone Active
+                EduNexus Online • Active
               </Typography>
             </Box>
             <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.7rem', display: 'block' }}>
-              Academic Year 2026/2027 • Term 1
+              Academic Year 2026/2027
             </Typography>
           </Box>
         </Box>

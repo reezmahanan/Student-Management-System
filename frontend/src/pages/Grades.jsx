@@ -47,13 +47,12 @@ const GRADE_COLOR_MAP = {
   F: 'error',
 };
 
-const SRI_LANKAN_ASSESSMENTS = [
-  'First Term Test (1 වන වාර විභාගය)',
-  'Mid-Year Term Test (2 වන වාර විභාගය)',
-  'Final Year End Test (3 වන වාර විභාගය)',
-  'G.C.E. A/L Model Exam Paper',
-  'Continuous Practical / Lab Assessment',
-  'Monthly Assignment / Evaluation',
+const ASSESSMENT_TYPES = [
+  'Mid-Term Examination',
+  'Final Semester Examination',
+  'Practical / Laboratory Assessment',
+  'Coursework & Project Evaluation',
+  'Monthly Evaluation',
   'Unit Quiz'
 ];
 
@@ -70,10 +69,10 @@ export default function Grades() {
 
   // New Grade Form
   const [courseId, setCourseId] = useState('');
-  const [examType, setExamType] = useState(SRI_LANKAN_ASSESSMENTS[0]);
+  const [examType, setExamType] = useState(ASSESSMENT_TYPES[0]);
   const [score, setScore] = useState('');
   const [maxScore, setMaxScore] = useState(100);
-  const [semester, setSemester] = useState('2026 - Term 1');
+  const [semester, setSemester] = useState('2026 - Semester 1');
   const [feedback, setFeedback] = useState('');
 
   useEffect(() => {
@@ -153,10 +152,10 @@ export default function Grades() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <div>
           <Typography variant="h4" fontWeight={700}>
-            Term Marks & Academic Performance Transcript
+            Academic Performance & GPA
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Sri Lankan G.C.E. Advanced Level & Secondary term assessments, standardized grading, and GPA
+            Standardized grading, transcript generation, and cumulative GPA calculations
           </Typography>
         </div>
 
@@ -325,7 +324,7 @@ export default function Grades() {
               <FormControl fullWidth size="small">
                 <InputLabel>Assessment Category</InputLabel>
                 <Select value={examType} label="Assessment Category" onChange={(e) => setExamType(e.target.value)}>
-                  {SRI_LANKAN_ASSESSMENTS.map((as) => (
+                  {ASSESSMENT_TYPES.map((as) => (
                     <MenuItem key={as} value={as}>
                       {as}
                     </MenuItem>
