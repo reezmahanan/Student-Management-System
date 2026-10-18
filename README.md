@@ -13,7 +13,7 @@ A full-stack enterprise-grade academic management system built with **Spring Boo
 - **📊 Continuous Assessment & Grades (GPA Engine)**: Exam and assignment grade recording with automated letter grades (`A+` to `F`) and real-time Cumulative GPA calculations.
 - **💳 Fee & Invoicing Management**: Tuition invoice issuance, payment status tracking (`PAID`, `PENDING`, `OVERDUE`), and online payment confirmation.
 - **🧠 AI Academic Risk Advisor & Early Warning System**: Automatically flags vulnerable students based on attendance (< 75%) and low scores (< 60%) with prescriptive intervention recommendations.
-- **📥 1-Click Directory Exports**: Instant export of student registries to native Microsoft Excel (`.xlsx`) via Apache POI and CSV (`.csv`).
+- **📥 1-Click Directory & Transcript Exports**: Instant export of official student registries to landscape PDF and native Microsoft Excel (`.xlsx`), plus student academic transcripts with GPA calculations.
 
 ---
 
@@ -21,10 +21,11 @@ A full-stack enterprise-grade academic management system built with **Spring Boo
 
 | Layer | Technologies |
 | :--- | :--- |
-| **Frontend** | React 19, Vite, Material UI (MUI v5), Recharts, Axios, React Router v7 |
+| **Frontend** | React 19, Vite, Material UI (MUI v5), Recharts, Axios, React Router |
 | **Backend** | Spring Boot 3.2.0, Java 17, Spring Security 6, JJWT, Spring Data JPA |
-| **Database** | MySQL 8 / H2 In-Memory (Zero-config fallback) |
-| **Reports** | Apache POI (Excel `.xlsx`), OpenCSV |
+| **Database** | MySQL 8 / H2 In-Memory |
+| **Containerization** | Docker, Docker Compose, Multi-stage Builds, Nginx Alpine |
+| **Reports** | OpenPDF (Official Sri Lankan Ministry style PDF), Apache POI (Excel `.xlsx`) |
 
 ---
 
@@ -55,7 +56,32 @@ Student-Management-System/
 
 ---
 
-## 🏃 Running the Project Locally
+## 🐳 Running with Docker (Recommended)
+You can run the entire system (Database + Backend + Frontend) with a single command:
+
+```bash
+docker compose up --build -d
+```
+
+### 🌐 Accessing Containerized Services:
+| Service | Container Name | URL / Port |
+| :--- | :--- | :--- |
+| **Frontend Web App** | `sms-frontend` | `http://localhost:5173` or `http://localhost:80` |
+| **Spring Boot REST API** | `sms-backend` | `http://localhost:8080/api` |
+| **MySQL Database** | `sms-mysql` | `localhost:3306` (Database: `student_management_db`) |
+
+To view container logs or shut down:
+```bash
+# View live logs
+docker compose logs -f
+
+# Stop all containers
+docker compose down
+```
+
+---
+
+## 🏃 Running the Project Locally (Without Docker)
 
 ### 1. Backend (Spring Boot)
 ```bash
@@ -64,7 +90,6 @@ mvn spring-boot:run
 ```
 - Server starts at: `http://localhost:8080`
 - API Base: `http://localhost:8080/api`
-- H2 Database Console: `http://localhost:8080/h2-console` (JDBC URL: `jdbc:h2:mem:student_management_db`, User: `sa`, No password)
 
 ### 2. Frontend (React + Vite)
 ```bash
@@ -72,14 +97,4 @@ cd frontend
 npm install
 npm run dev
 ```
-- Web Application opens at: `http://localhost:5173` (or `http://localhost:5174`)
-
----
-
-## 🔑 Demo Login Accounts
-
-| Role | Username | Password |
-| :--- | :--- | :--- |
-| **Administrator** | `admin` | `admin123` |
-| **Teacher** | `teacher` | `teacher123` |
-| **Student** | `student` | `student123` |
+- Web Application opens at: `http://localhost:5173`

@@ -1,0 +1,65 @@
+services:
+  # MySQL Database Service
+  mysql-db:
+    image: mysql:8.0
+    container_name: sms-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: student_management_db
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - sms-network
+
+  # Spring Boot REST API Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: sms-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/student_management_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-root}
+      SPRING_PROFILES_ACTIVE: prod
+      APP_JWT_SECRET: ${APP_JWT_SECRET:-404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - sms-network
+
+  # React + Vite Frontend (Served with Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: sms-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - sms-network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  sms-network:
+    driver: bridge
