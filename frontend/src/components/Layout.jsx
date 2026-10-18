@@ -39,7 +39,7 @@ const navItems = [
   { label: 'Students', path: '/students', icon: <PeopleIcon /> },
   { label: 'Courses', path: '/courses', icon: <MenuBookIcon /> },
   { label: 'Attendance', path: '/attendance', icon: <HowToRegIcon /> },
-  { label: 'Grades & GPA', path: '/grades', icon: <GradeIcon /> },
+  { label: 'Grades & Z-Score', path: '/grades', icon: <GradeIcon /> },
   { label: 'Fees & Invoices', path: '/fees', icon: <PaymentIcon /> },
   { label: 'AI Academic Advisor', path: '/advisor', icon: <WarningAmberIcon /> },
 ];

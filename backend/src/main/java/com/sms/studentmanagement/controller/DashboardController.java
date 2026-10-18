@@ -13,6 +13,7 @@ import com.sms.studentmanagement.repository.GradeRepository;
 import com.sms.studentmanagement.repository.StudentRepository;
 import com.sms.studentmanagement.service.AcademicAdvisorService;
 import com.sms.studentmanagement.service.AttendanceService;
+import com.sms.studentmanagement.service.GradeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +37,7 @@ public class DashboardController {
     private final CourseRepository courseRepository;
     private final FeePaymentRepository feePaymentRepository;
     private final GradeRepository gradeRepository;
+    private final GradeService gradeService;
     private final AttendanceService attendanceService;
     private final AcademicAdvisorService academicAdvisorService;
 
@@ -51,20 +53,28 @@ public class DashboardController {
                 .mapToLong(s -> s.getCourses().size())
                 .sum();
 
-        // Overall GPA & Attendance
+        // Overall GPA, A/L Z-Score & Attendance
         double totalGpa = 0.0;
+        double totalZ = 0.0;
         double totalAtt = 0.0;
+        int zCount = 0;
         List<Student> students = studentRepository.findAll();
         for (Student s : students) {
             Double gpa = gradeRepository.calculateAverageGpaByStudentId(s.getId());
             if (gpa != null) totalGpa += gpa;
             totalAtt += attendanceService.getStudentAttendanceRate(s.getId());
+            Double zs = gradeService.calculateStudentZScore(s.getId());
+            if (zs != null) {
+                totalZ += zs;
+                zCount++;
+            }
         }
 
         double overallAverageGpa = students.isEmpty() ? 0.0 : Math.round((totalGpa / students.size()) * 100.0) / 100.0;
+        double overallAverageZScore = zCount == 0 ? 0.0 : Math.round((totalZ / zCount) * 10000.0) / 10000.0;
         double overallAttendanceRate = students.isEmpty() ? 100.0 : Math.round((totalAtt / students.size()) * 10.0) / 10.0;
 
-        // Fees (in Sri Lankan Rupees LKR)
+        // Fees
         BigDecimal totalFeesCollected = feePaymentRepository.sumAmountByStatus(PaymentStatus.PAID);
         BigDecimal pendingFees = feePaymentRepository.sumAmountByStatus(PaymentStatus.PENDING);
 
@@ -88,6 +98,7 @@ public class DashboardController {
                 .totalCourses(totalCourses)
                 .totalEnrollments(totalEnrollments)
                 .overallAverageGpa(overallAverageGpa)
+                .overallAverageZScore(overallAverageZScore)
                 .overallAttendanceRate(overallAttendanceRate)
                 .totalFeesCollected(totalFeesCollected != null ? totalFeesCollected : BigDecimal.ZERO)
                 .pendingFees(pendingFees != null ? pendingFees : BigDecimal.ZERO)

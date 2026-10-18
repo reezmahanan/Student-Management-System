@@ -102,34 +102,85 @@ public class GradeServiceImpl implements GradeService {
         return avg != null ? Math.round(avg * 100.0) / 100.0 : 0.0;
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Double calculateStudentZScore(Long studentId) {
+        List<Grade> studentGrades = gradeRepository.findByStudentId(studentId);
+        if (studentGrades.isEmpty()) {
+            return 0.0;
+        }
+
+        double totalZ = 0.0;
+        int count = 0;
+
+        for (Grade g : studentGrades) {
+            double z = computeSubjectZScore(g);
+            totalZ += z;
+            count++;
+        }
+
+        if (count == 0) return 0.0;
+        double compositeZ = totalZ / count;
+        return Math.round(compositeZ * 10000.0) / 10000.0;
+    }
+
+    private double computeSubjectZScore(Grade grade) {
+        double studentPct = (grade.getScore() / grade.getMaxScore()) * 100.0;
+        List<Grade> courseGrades = gradeRepository.findByCourseId(grade.getCourse().getId());
+
+        if (courseGrades.size() <= 1) {
+            // Standard normalization benchmark (mean = 50.0, std = 15.0)
+            return Math.round(((studentPct - 50.0) / 15.0) * 10000.0) / 10000.0;
+        }
+
+        double sum = 0.0;
+        for (Grade cg : courseGrades) {
+            sum += (cg.getScore() / cg.getMaxScore()) * 100.0;
+        }
+        double mean = sum / courseGrades.size();
+
+        double sumSquares = 0.0;
+        for (Grade cg : courseGrades) {
+            double pct = (cg.getScore() / cg.getMaxScore()) * 100.0;
+            sumSquares += Math.pow(pct - mean, 2);
+        }
+        double stdDev = Math.sqrt(sumSquares / courseGrades.size());
+
+        if (stdDev < 0.001) {
+            return Math.round(((studentPct - 50.0) / 15.0) * 10000.0) / 10000.0;
+        }
+
+        double z = (studentPct - mean) / stdDev;
+        return Math.round(z * 10000.0) / 10000.0;
+    }
+
     private void computeLetterAndGpa(Grade grade) {
         double percentage = (grade.getScore() / grade.getMaxScore()) * 100.0;
 
-        if (percentage >= 90) {
-            grade.setLetterGrade("A+");
-            grade.setGpaPoint(4.0);
-        } else if (percentage >= 85) {
+        // Official G.C.E. Advanced Level Grading Scale:
+        // A (Distinction): >= 75%
+        // B (Very Good Pass): >= 65%
+        // C (Credit Pass): >= 55%
+        // S (Simple Pass): >= 35%
+        // F (Fail): < 35%
+        if (percentage >= 75.0) {
             grade.setLetterGrade("A");
-            grade.setGpaPoint(3.75);
-        } else if (percentage >= 80) {
-            grade.setLetterGrade("B+");
-            grade.setGpaPoint(3.5);
-        } else if (percentage >= 75) {
+            grade.setGpaPoint(4.0);
+        } else if (percentage >= 65.0) {
             grade.setLetterGrade("B");
             grade.setGpaPoint(3.0);
-        } else if (percentage >= 70) {
-            grade.setLetterGrade("C+");
-            grade.setGpaPoint(2.5);
-        } else if (percentage >= 60) {
+        } else if (percentage >= 55.0) {
             grade.setLetterGrade("C");
             grade.setGpaPoint(2.0);
-        } else if (percentage >= 50) {
-            grade.setLetterGrade("D");
+        } else if (percentage >= 35.0) {
+            grade.setLetterGrade("S");
             grade.setGpaPoint(1.0);
         } else {
             grade.setLetterGrade("F");
             grade.setGpaPoint(0.0);
         }
+
+        grade.setZScore(computeSubjectZScore(grade));
     }
 
     private GradeDTO toDTO(Grade g) {
@@ -145,6 +196,7 @@ public class GradeServiceImpl implements GradeService {
                 .maxScore(g.getMaxScore())
                 .letterGrade(g.getLetterGrade())
                 .gpaPoint(g.getGpaPoint())
+                .zScore(g.getZScore() != null ? g.getZScore() : computeSubjectZScore(g))
                 .semester(g.getSemester())
                 .examDate(g.getExamDate())
                 .feedback(g.getFeedback())

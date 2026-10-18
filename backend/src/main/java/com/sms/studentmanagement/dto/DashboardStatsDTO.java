@@ -14,6 +14,7 @@ public class DashboardStatsDTO {
     private long totalCourses;
     private long totalEnrollments;
     private double overallAverageGpa;
+    private double overallAverageZScore;
     private double overallAttendanceRate;
     private BigDecimal totalFeesCollected;
     private BigDecimal pendingFees;

@@ -37,6 +37,7 @@ public class GradeDTO {
 
     private String letterGrade;
     private Double gpaPoint;
+    private Double zScore;
     private String semester;
     private LocalDate examDate;
     private String feedback;

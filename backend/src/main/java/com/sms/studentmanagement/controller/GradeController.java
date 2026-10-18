@@ -60,4 +60,10 @@ public class GradeController {
         Double gpa = gradeService.calculateStudentGPA(studentId);
         return ResponseEntity.ok(ApiResponse.success("Student GPA retrieved", gpa));
     }
+
+    @GetMapping("/student/{studentId}/z-score")
+    public ResponseEntity<ApiResponse<Double>> getStudentZScore(@PathVariable Long studentId) {
+        Double zScore = gradeService.calculateStudentZScore(studentId);
+        return ResponseEntity.ok(ApiResponse.success("Student A/L Z-Score retrieved", zScore));
+    }
 }

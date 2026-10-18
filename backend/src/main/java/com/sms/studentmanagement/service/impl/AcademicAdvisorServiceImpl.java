@@ -209,6 +209,7 @@ public class AcademicAdvisorServiceImpl implements AcademicAdvisorService {
 
         List<Grade> grades = gradeRepository.findByStudentId(studentId);
         Double gpa = gradeService.calculateStudentGPA(studentId);
+        Double zScore = gradeService.calculateStudentZScore(studentId);
         double attRate = attendanceService.getStudentAttendanceRate(studentId);
 
         Document document = new Document(PageSize.A4, 30, 30, 30, 30);
@@ -240,13 +241,13 @@ public class AcademicAdvisorServiceImpl implements AcademicAdvisorService {
 
             addBioRow(bioTable, "Admission No:", student.getAdmissionNo() != null ? student.getAdmissionNo() : ("ST/2026/" + student.getId()), "National ID (NIC):", student.getNicNo() != null ? student.getNicNo() : "—", boldFont, textFont);
             addBioRow(bioTable, "Student Name:", (student.getFullNameWithInitials() != null ? student.getFullNameWithInitials() : student.getFirstName() + " " + student.getLastName()), "District:", student.getDistrict() != null ? student.getDistrict() : "Colombo", boldFont, textFont);
-            addBioRow(bioTable, "Academic Stream:", student.getAcademicStream() != null ? student.getAcademicStream() : "A/L Physical Science", "Province:", student.getProvince() != null ? student.getProvince() : "Western Province", boldFont, textFont);
-            addBioRow(bioTable, "Attendance Standing:", String.format("%.1f%%", attRate), "Cumulative GPA:", String.format("%.2f / 4.0", gpa != null ? gpa : 0.0), boldFont, textFont);
+            addBioRow(bioTable, "Academic Stream:", student.getAcademicStream() != null ? student.getAcademicStream() : "Physical Science", "Province:", student.getProvince() != null ? student.getProvince() : "Western Province", boldFont, textFont);
+            addBioRow(bioTable, "Attendance Standing:", String.format("%.1f%%", attRate), "Composite A/L Z-Score:", String.format("%+.4f", zScore != null ? zScore : 0.0), boldFont, textFont);
 
             document.add(bioTable);
 
             // Grade Records Table
-            Paragraph gradesHeader = new Paragraph("Examination & Continuous Assessment Records", subHeaderFont);
+            Paragraph gradesHeader = new Paragraph("G.C.E. A/L Examination & Assessment Records", subHeaderFont);
             gradesHeader.setSpacingAfter(8);
             document.add(gradesHeader);
 
@@ -254,7 +255,7 @@ public class AcademicAdvisorServiceImpl implements AcademicAdvisorService {
             gradeTable.setWidthPercentage(100);
             gradeTable.setWidths(new float[]{3.5f, 2.5f, 2.0f, 2.0f, 2.0f, 2.0f});
 
-            String[] gradeHeaders = {"Subject / Course", "Assessment", "Marks", "Out of", "Grade", "GPA Pt"};
+            String[] gradeHeaders = {"Subject / Course", "Assessment", "Marks", "Out of", "A/L Grade", "Z-Score"};
             for (String gh : gradeHeaders) {
                 PdfPCell cell = new PdfPCell(new Phrase(gh, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, Color.WHITE)));
                 cell.setBackgroundColor(new Color(13, 71, 161));
@@ -276,7 +277,8 @@ public class AcademicAdvisorServiceImpl implements AcademicAdvisorService {
                     gradeTable.addCell(createCell(String.valueOf(g.getScore()), textFont));
                     gradeTable.addCell(createCell(String.valueOf(g.getMaxScore()), textFont));
                     gradeTable.addCell(createCell(g.getLetterGrade() != null ? g.getLetterGrade() : "—", boldFont));
-                    gradeTable.addCell(createCell(g.getGpaPoint() != null ? String.format("%.1f", g.getGpaPoint()) : "—", textFont));
+                    Double rowZ = g.getZScore();
+                    gradeTable.addCell(createCell(rowZ != null ? String.format("%+.4f", rowZ) : "—", textFont));
                 }
             }
 

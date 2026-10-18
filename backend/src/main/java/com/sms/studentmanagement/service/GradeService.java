@@ -11,4 +11,5 @@ public interface GradeService {
     List<GradeDTO> getGradesByStudent(Long studentId);
     List<GradeDTO> getGradesByCourse(Long courseId);
     Double calculateStudentGPA(Long studentId);
+    Double calculateStudentZScore(Long studentId);
 }

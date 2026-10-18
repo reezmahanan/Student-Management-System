@@ -164,9 +164,13 @@ export default function Dashboard() {
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            title="Institutional Average GPA"
-            value={stats?.overallAverageGpa}
-            subtitle="Standard 4.0 Scale"
+            title="Institutional A/L Z-Score"
+            value={
+              stats?.overallAverageZScore !== undefined && stats?.overallAverageZScore !== null
+                ? (stats.overallAverageZScore >= 0 ? `+${stats.overallAverageZScore.toFixed(4)}` : stats.overallAverageZScore.toFixed(4))
+                : '0.0000'
+            }
+            subtitle="Cohort Normalized Performance"
             icon={<GradeIcon />}
             color="#7b1fa2"
             loading={loading}

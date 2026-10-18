@@ -40,6 +40,9 @@ public class Grade {
     @Column(name = "gpa_point")
     private Double gpaPoint; // 4.0 scale
 
+    @Column(name = "z_score")
+    private Double zScore; // G.C.E. A/L Standard Score (e.g. 1.8452)
+
     @Column(name = "semester", length = 30)
     private String semester; // e.g. "Fall 2026"
 

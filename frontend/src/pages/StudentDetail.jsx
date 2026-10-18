@@ -36,6 +36,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutlined';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { getStudentById, enrollInCourse, unenrollFromCourse } from '../api/studentApi';
 import { getAllCourses } from '../api/courseApi';
+import { getStudentZScore } from '../api/gradeApi';
 import { downloadStudentTranscriptPdf } from '../api/analyticsApi';
 
 const INFO_FIELD = ({ label, value }) => (
@@ -54,6 +55,7 @@ export default function StudentDetail() {
   const navigate = useNavigate();
 
   const [student, setStudent] = useState(null);
+  const [zScore, setZScore] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -65,8 +67,13 @@ export default function StudentDetail() {
 
   const fetchStudent = () => {
     setLoading(true);
-    getStudentById(id)
-      .then((res) => setStudent(res.data?.data || res.data))
+    Promise.all([getStudentById(id), getStudentZScore(id).catch(() => null)])
+      .then(([studentRes, zRes]) => {
+        setStudent(studentRes.data?.data || studentRes.data);
+        if (zRes?.data?.data !== undefined) {
+          setZScore(zRes.data.data);
+        }
+      })
       .catch(() => setError('Failed to load student details.'))
       .finally(() => setLoading(false));
   };
@@ -171,12 +178,20 @@ export default function StudentDetail() {
                 <Typography variant="body2" color="text.secondary">
                   Admission: {student.admissionNo || `ST/2026/${student.id}`}
                 </Typography>
-                <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+                <Stack direction="row" spacing={1} sx={{ mt: 1, flexWrap: 'wrap', justifyContent: 'center', gap: 0.5 }}>
                   <Chip
                     label={student.academicStream || 'A/L Physical Science'}
                     color="primary"
                     size="small"
                   />
+                  {zScore !== null && (
+                    <Chip
+                      label={`A/L Z-Score: ${zScore >= 0 ? `+${zScore.toFixed(4)}` : zScore.toFixed(4)}`}
+                      color={zScore >= 1.5 ? 'success' : zScore >= 0.5 ? 'primary' : zScore >= 0 ? 'warning' : 'error'}
+                      size="small"
+                      sx={{ fontWeight: 600 }}
+                    />
+                  )}
                   <Chip
                     label={student.gender || 'N/A'}
                     variant="outlined"

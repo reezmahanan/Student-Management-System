@@ -33,17 +33,14 @@ import GradeIcon from '@mui/icons-material/Grade';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { getAllStudents } from '../api/studentApi';
 import { getAllCourses } from '../api/courseApi';
-import { getGradesByStudent, recordGrade, deleteGrade, getStudentGPA } from '../api/gradeApi';
+import { getGradesByStudent, recordGrade, deleteGrade, getStudentGPA, getStudentZScore } from '../api/gradeApi';
 import { downloadStudentTranscriptPdf } from '../api/analyticsApi';
 
 const GRADE_COLOR_MAP = {
-  'A+': 'success',
   A: 'success',
-  'B+': 'primary',
   B: 'primary',
-  'C+': 'info',
   C: 'info',
-  D: 'warning',
+  S: 'warning',
   F: 'error',
 };
 
@@ -62,6 +59,7 @@ export default function Grades() {
   const [selectedStudentId, setSelectedStudentId] = useState('');
   const [grades, setGrades] = useState([]);
   const [studentGpa, setStudentGpa] = useState(0.0);
+  const [studentZScore, setStudentZScore] = useState(0.0);
   const [loading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [error, setError] = useState('');
@@ -94,10 +92,15 @@ export default function Grades() {
     setLoading(true);
     setError('');
 
-    Promise.all([getGradesByStudent(studentId), getStudentGPA(studentId)])
-      .then(([gradesRes, gpaRes]) => {
+    Promise.all([
+      getGradesByStudent(studentId),
+      getStudentZScore(studentId).catch(() => ({ data: { data: 0.0 } })),
+      getStudentGPA(studentId).catch(() => ({ data: { data: 0.0 } })),
+    ])
+      .then(([gradesRes, zRes, gpaRes]) => {
         setGrades(gradesRes.data?.data || gradesRes.data || []);
-        setStudentGpa(gpaRes.data?.data ?? gpaRes.data ?? 0.0);
+        setStudentZScore(zRes?.data?.data ?? 0.0);
+        setStudentGpa(gpaRes?.data?.data ?? 0.0);
       })
       .catch(() => setError('Failed to load student grade records.'))
       .finally(() => setLoading(false));
@@ -152,10 +155,10 @@ export default function Grades() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <div>
           <Typography variant="h4" fontWeight={700}>
-            Academic Performance & GPA
+            A/L Performance & Z-Score Engine
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Standardized grading, transcript generation, and cumulative GPA calculations
+            Official G.C.E. Advanced Level grading scale (A, B, C, S, F) and subject-normalized Z-Scores
           </Typography>
         </div>
 
@@ -214,10 +217,22 @@ export default function Grades() {
                 <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
                   <Box>
                     <Typography variant="caption" color="text.secondary">
-                      CUMULATIVE GPA
+                      COMPOSITE A/L Z-SCORE
                     </Typography>
-                    <Typography variant="h5" fontWeight={700} color="primary.main">
-                      {studentGpa ? studentGpa.toFixed(2) : '0.00'} / 4.0
+                    <Typography
+                      variant="h5"
+                      fontWeight={700}
+                      color={
+                        studentZScore >= 1.5
+                          ? 'success.main'
+                          : studentZScore >= 0.5
+                          ? 'primary.main'
+                          : studentZScore >= 0
+                          ? 'warning.main'
+                          : 'error.main'
+                      }
+                    >
+                      {studentZScore >= 0 ? `+${studentZScore.toFixed(4)}` : studentZScore.toFixed(4)}
                     </Typography>
                   </Box>
                   <Box>
@@ -252,8 +267,8 @@ export default function Grades() {
               <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Assessment Type</TableCell>
               <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Raw Marks</TableCell>
               <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Percentage</TableCell>
-              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Letter Grade</TableCell>
-              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>GPA Point</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>A/L Grade</TableCell>
+              <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Subject Z-Score</TableCell>
               <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Term / Year</TableCell>
               <TableCell sx={{ color: '#fff', fontWeight: 700 }}>Actions</TableCell>
             </TableRow>
@@ -283,9 +298,14 @@ export default function Grades() {
                         label={g.letterGrade || '—'}
                         size="small"
                         color={GRADE_COLOR_MAP[g.letterGrade] || 'default'}
+                        sx={{ fontWeight: 700 }}
                       />
                     </TableCell>
-                    <TableCell sx={{ fontWeight: 700 }}>{g.gpaPoint ? g.gpaPoint.toFixed(1) : '—'}</TableCell>
+                    <TableCell sx={{ fontWeight: 700, fontFamily: 'monospace' }}>
+                      {g.zScore !== undefined && g.zScore !== null
+                        ? (g.zScore >= 0 ? `+${g.zScore.toFixed(4)}` : g.zScore.toFixed(4))
+                        : '0.0000'}
+                    </TableCell>
                     <TableCell>{g.semester || '—'}</TableCell>
                     <TableCell>
                       <Tooltip title="Delete">
@@ -306,6 +326,9 @@ export default function Grades() {
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>Record Term Marks & Assessment</DialogTitle>
         <DialogContent sx={{ pt: 2 }}>
+          <Alert severity="info" sx={{ mb: 2 }}>
+            <strong>A/L Grading Bands:</strong> A Distinction (≥ 75%), B Very Good (≥ 65%), C Credit (≥ 55%), S Simple Pass (≥ 35%), F Fail (&lt; 35%). Z-Score will be computed automatically against cohort statistics.
+          </Alert>
           <Grid container spacing={2} sx={{ mt: 0.5 }}>
             <Grid item xs={12}>
               <FormControl fullWidth size="small">
