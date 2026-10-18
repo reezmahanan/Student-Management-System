@@ -85,12 +85,25 @@ export default function Register() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        bgcolor: '#f0f2f5',
+        backgroundImage: `linear-gradient(135deg, rgba(8, 28, 64, 0.78) 0%, rgba(13, 71, 161, 0.72) 100%), url('/edunexus-bg.jpg')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
         py: 4,
         px: 2,
       }}
     >
-      <Card sx={{ maxWidth: 520, width: '100%', borderRadius: 3, boxShadow: '0 8px 32px rgba(0,0,0,0.08)' }}>
+      <Card
+        sx={{
+          maxWidth: 540,
+          width: '100%',
+          borderRadius: 4,
+          boxShadow: '0 24px 60px rgba(0,0,0,0.35)',
+          background: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(16px)',
+          border: '1px solid rgba(255, 255, 255, 0.25)',
+        }}
+      >
         <CardContent sx={{ p: 4 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3 }}>
             <Box

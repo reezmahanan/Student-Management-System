@@ -26,6 +26,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import SchoolIcon from '@mui/icons-material/School';
 import { useNavigate } from 'react-router-dom';
 import {
   BarChart,
@@ -103,26 +104,67 @@ export default function Dashboard() {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <div>
-          <Typography variant="h4" fontWeight={700}>
-            Academic Intelligence Dashboard
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            EduNexus • Institutional Performance, Student Analytics & Early Intervention
-          </Typography>
-        </div>
-
-        <Button
-          variant="contained"
-          color="error"
-          startIcon={<PictureAsPdfIcon />}
-          onClick={downloadStudentsPdf}
-          sx={{ bgcolor: '#d32f2f' }}
-        >
-          Export Registry PDF
-        </Button>
-      </Box>
+      {/* Hero Welcome Banner with Unique Campus Background */}
+      <Card
+        sx={{
+          mb: 3.5,
+          borderRadius: 3,
+          overflow: 'hidden',
+          backgroundImage: `linear-gradient(90deg, rgba(8, 28, 64, 0.92) 0%, rgba(13, 71, 161, 0.8) 55%, rgba(13, 71, 161, 0.45) 100%), url('/edunexus-bg.jpg')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          color: '#fff',
+          boxShadow: '0 12px 36px rgba(13, 71, 161, 0.25)',
+        }}
+      >
+        <CardContent sx={{ p: { xs: 3, md: 3.5 } }}>
+          <Grid container alignItems="center" spacing={2}>
+            <Grid item xs={12} md={8}>
+              <Box
+                sx={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  bgcolor: 'rgba(255, 179, 0, 0.2)',
+                  px: 1.5,
+                  py: 0.5,
+                  borderRadius: 1.5,
+                  mb: 1.5,
+                  border: '1px solid rgba(255, 179, 0, 0.4)',
+                }}
+              >
+                <SchoolIcon sx={{ color: '#ffb300', fontSize: 18 }} />
+                <Typography variant="caption" sx={{ color: '#ffb300', fontWeight: 700, letterSpacing: 0.8 }}>
+                  EDUNEXUS ACADEMIC SYSTEM • LIVE REPOSITORY
+                </Typography>
+              </Box>
+              <Typography variant="h4" fontWeight={800} sx={{ mb: 1, color: '#fff' }}>
+                Academic Intelligence Dashboard
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.85)', maxWidth: 620, lineHeight: 1.6 }}>
+                Real-time MySQL 8.0 synchronization, G.C.E. Advanced Level Z-Score analysis, automated attendance tracking, and early warning analytics.
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={4} sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' }, gap: 1.5 }}>
+              <Button
+                variant="contained"
+                startIcon={<PictureAsPdfIcon />}
+                onClick={downloadStudentsPdf}
+                sx={{
+                  bgcolor: '#d32f2f',
+                  fontWeight: 700,
+                  px: 2.5,
+                  py: 1.2,
+                  boxShadow: '0 4px 14px rgba(211, 47, 47, 0.4)',
+                  '&:hover': { bgcolor: '#b71c1c' },
+                }}
+              >
+                Export Registry PDF
+              </Button>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
 
       {error && (
         <Alert severity="warning" sx={{ mb: 3 }}>
