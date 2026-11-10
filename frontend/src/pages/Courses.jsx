@@ -45,13 +45,8 @@ export default function Courses() {
     setError('');
     getAllCourses()
       .then((res) => {
-        if (Array.isArray(res.data)) {
-          setCourses(res.data);
-        } else if (res.data?.content) {
-          setCourses(res.data.content);
-        } else {
-          setCourses([]);
-        }
+        const list = res.data?.data || res.data?.content || (Array.isArray(res.data) ? res.data : []);
+        setCourses(Array.isArray(list) ? list : []);
       })
       .catch(() => setError('Failed to load courses.'))
       .finally(() => setLoading(false));
