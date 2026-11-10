@@ -9,6 +9,7 @@ import {
   TextField,
   CircularProgress,
   Typography,
+  Alert,
 } from '@mui/material';
 
 const EMPTY_FORM = {
@@ -22,6 +23,7 @@ const EMPTY_FORM = {
 export default function CourseForm({ open, course, onSave, onClose }) {
   const [form, setForm] = useState(EMPTY_FORM);
   const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState('');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -37,6 +39,7 @@ export default function CourseForm({ open, course, onSave, onClose }) {
       setForm(EMPTY_FORM);
     }
     setErrors({});
+    setApiError('');
   }, [course, open]);
 
   const validate = () => {
@@ -55,9 +58,11 @@ export default function CourseForm({ open, course, onSave, onClose }) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
+    if (apiError) setApiError('');
   };
 
   const handleSubmit = async () => {
+    setApiError('');
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -66,6 +71,9 @@ export default function CourseForm({ open, course, onSave, onClose }) {
     setSaving(true);
     try {
       await onSave({ ...form, credits: Number(form.credits) });
+    } catch (err) {
+      const msg = err.response?.data?.message || err.message || 'Failed to save course. Please ensure you are logged in and backend is running.';
+      setApiError(msg);
     } finally {
       setSaving(false);
     }
@@ -79,6 +87,11 @@ export default function CourseForm({ open, course, onSave, onClose }) {
         </Typography>
       </DialogTitle>
       <DialogContent dividers>
+        {apiError && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {apiError}
+          </Alert>
+        )}
         <Grid container spacing={2} sx={{ mt: 0.5 }}>
           <Grid item xs={12} sm={8}>
             <TextField

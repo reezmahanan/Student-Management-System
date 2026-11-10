@@ -14,6 +14,7 @@ import {
   CircularProgress,
   Typography,
   Divider,
+  Alert,
 } from '@mui/material';
 
 const DISTRICTS_REGIONS = [
@@ -58,6 +59,7 @@ const EMPTY_FORM = {
 export default function StudentForm({ open, student, onSave, onClose }) {
   const [form, setForm] = useState(EMPTY_FORM);
   const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState('');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -84,6 +86,7 @@ export default function StudentForm({ open, student, onSave, onClose }) {
       setForm(EMPTY_FORM);
     }
     setErrors({});
+    setApiError('');
   }, [student, open]);
 
   const validate = () => {
@@ -103,9 +106,11 @@ export default function StudentForm({ open, student, onSave, onClose }) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
+    if (apiError) setApiError('');
   };
 
   const handleSubmit = async () => {
+    setApiError('');
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -113,7 +118,21 @@ export default function StudentForm({ open, student, onSave, onClose }) {
     }
     setSaving(true);
     try {
-      await onSave(form);
+      const payload = {
+        ...form,
+        dateOfBirth: form.dateOfBirth?.trim() ? form.dateOfBirth : null,
+        enrollmentDate: form.enrollmentDate?.trim() ? form.enrollmentDate : null,
+        admissionNo: form.admissionNo?.trim() || null,
+        nicNo: form.nicNo?.trim() || null,
+        phone: form.phone?.trim() || null,
+        address: form.address?.trim() || null,
+        guardianName: form.guardianName?.trim() || null,
+        guardianPhone: form.guardianPhone?.trim() || null,
+      };
+      await onSave(payload);
+    } catch (err) {
+      const msg = err.response?.data?.message || err.message || 'Failed to complete registration.';
+      setApiError(msg);
     } finally {
       setSaving(false);
     }
@@ -130,6 +149,11 @@ export default function StudentForm({ open, student, onSave, onClose }) {
         </Typography>
       </DialogTitle>
       <DialogContent dividers>
+        {apiError && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {apiError}
+          </Alert>
+        )}
         <Typography variant="subtitle2" color="primary" fontWeight={700} sx={{ mb: 1.5 }}>
           1. Student Identification & Academic Details
         </Typography>
