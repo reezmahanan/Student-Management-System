@@ -196,38 +196,6 @@ export default function Login() {
               </Button>
             </form>
 
-            {/* Quick Demo Credentials */}
-            <Box sx={{ mt: 3, p: 2, bgcolor: '#f0f4f8', borderRadius: 2 }}>
-              <Typography variant="caption" color="text.secondary" fontWeight={600} display="block" sx={{ mb: 1 }}>
-                Quick Test Credentials (Click to fill):
-              </Typography>
-              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  onClick={() => { setUsername('admin'); setPassword('admin123'); }}
-                  sx={{ textTransform: 'none', fontSize: '0.75rem', py: 0.3 }}
-                >
-                  Admin
-                </Button>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  onClick={() => { setUsername('teacher'); setPassword('teacher123'); }}
-                  sx={{ textTransform: 'none', fontSize: '0.75rem', py: 0.3 }}
-                >
-                  Teacher
-                </Button>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  onClick={() => { setUsername('student'); setPassword('student123'); }}
-                  sx={{ textTransform: 'none', fontSize: '0.75rem', py: 0.3 }}
-                >
-                  Student
-                </Button>
-              </Box>
-            </Box>
 
             <Box sx={{ textAlign: 'center', mt: 3 }}>
               <Typography variant="body2" color="text.secondary">
