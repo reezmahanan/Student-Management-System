@@ -25,7 +25,6 @@ import GradeIcon from '@mui/icons-material/Grade';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import SchoolIcon from '@mui/icons-material/School';
 import { useNavigate } from 'react-router-dom';
 import {
   BarChart,
@@ -116,24 +115,6 @@ export default function Dashboard() {
         }}
       >
         <CardContent sx={{ p: { xs: 3, md: 3.5 } }}>
-          <Box
-            sx={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 1,
-              bgcolor: 'rgba(255, 179, 0, 0.2)',
-              px: 1.5,
-              py: 0.5,
-              borderRadius: 1.5,
-              mb: 1.5,
-              border: '1px solid rgba(255, 179, 0, 0.4)',
-            }}
-          >
-            <SchoolIcon sx={{ color: '#ffb300', fontSize: 18 }} />
-            <Typography variant="caption" sx={{ color: '#ffb300', fontWeight: 700, letterSpacing: 0.8 }}>
-              EDUNEXUS ACADEMIC SYSTEM • LIVE REPOSITORY
-            </Typography>
-          </Box>
           <Typography variant="h4" fontWeight={800} sx={{ mb: 1, color: '#fff' }}>
             Academic Intelligence Dashboard
           </Typography>
