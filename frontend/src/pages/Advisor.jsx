@@ -46,11 +46,11 @@ export default function Advisor() {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <PsychologyIcon sx={{ fontSize: 32, color: 'primary.main' }} />
             <Typography variant="h4" fontWeight={700}>
-              AI Academic Advisor & Early Warning System
+              Academic Advisor & Student Support
             </Typography>
           </Box>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-            Automated intelligence model detecting at-risk students based on attendance drop-offs and academic trends
+            Identifies students needing extra academic support based on attendance and assessment performance
           </Typography>
         </div>
       </Box>

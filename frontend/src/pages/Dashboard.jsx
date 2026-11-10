@@ -116,10 +116,10 @@ export default function Dashboard() {
       >
         <CardContent sx={{ p: { xs: 3, md: 3.5 } }}>
           <Typography variant="h4" fontWeight={800} sx={{ mb: 1, color: '#fff' }}>
-            Academic Intelligence Dashboard
+            Student Management Dashboard
           </Typography>
           <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.85)', maxWidth: 720, lineHeight: 1.6 }}>
-            Real-time MySQL 8.0 synchronization, G.C.E. Advanced Level Z-Score analysis, automated attendance tracking, and early warning analytics.
+            Track student records, course enrollments, attendance, and exam grades in one place.
           </Typography>
         </CardContent>
       </Card>

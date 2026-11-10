@@ -94,36 +94,36 @@ export default function Login() {
                   EDUNEXUS
                 </Typography>
                 <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)', letterSpacing: 0.8 }}>
-                  ACADEMIC INTELLIGENCE PLATFORM
+                  STUDENT MANAGEMENT SYSTEM
                 </Typography>
               </Box>
             </Box>
 
             <Typography variant="h4" fontWeight={700} sx={{ lineHeight: 1.25, mb: 2 }}>
-              Empowering Education with Real-Time Precision
+              Welcome to EduNexus
             </Typography>
 
             <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.85)', mb: 4, lineHeight: 1.6 }}>
-              Comprehensive student management, G.C.E. Advanced Level Z-Score normalization, attendance analytics, and certified transcript generation.
+              A centralized platform designed to manage student profiles, course enrollments, attendance records, and exam evaluations.
             </Typography>
 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.8 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                 <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#4caf50' }} />
                 <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)' }}>
-                  <strong>Real-Time MySQL 8.0:</strong> Instant transactional synchronization
+                  <strong>Student Profiles:</strong> Manage admissions and personal details
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                 <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#ffb300' }} />
                 <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)' }}>
-                  <strong>A/L Z-Score Engine:</strong> Cohort standard deviation normalization
+                  <strong>Courses & Attendance:</strong> Track subject enrollments and attendance
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                 <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#29b6f6' }} />
                 <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)' }}>
-                  <strong>Enterprise Ready:</strong> Containerized multi-role architecture
+                  <strong>Grades & Z-Scores:</strong> Record assessment marks and calculate results
                 </Typography>
               </Box>
             </Box>

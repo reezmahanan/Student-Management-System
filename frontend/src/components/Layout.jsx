@@ -41,7 +41,7 @@ const navItems = [
   { label: 'Attendance', path: '/attendance', icon: <HowToRegIcon /> },
   { label: 'Grades & Z-Score', path: '/grades', icon: <GradeIcon /> },
   { label: 'Fees & Invoices', path: '/fees', icon: <PaymentIcon /> },
-  { label: 'AI Academic Advisor', path: '/advisor', icon: <WarningAmberIcon /> },
+  { label: 'Academic Advisor', path: '/advisor', icon: <WarningAmberIcon /> },
 ];
 
 export default function Layout() {
