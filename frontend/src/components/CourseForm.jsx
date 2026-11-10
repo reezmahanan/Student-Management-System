@@ -44,12 +44,12 @@ export default function CourseForm({ open, course, onSave, onClose }) {
 
   const validate = () => {
     const newErrors = {};
-    if (!form.courseName.trim()) newErrors.courseName = 'Course name is required';
-    if (!form.courseCode.trim()) newErrors.courseCode = 'Course code is required';
+    if (!form.courseName.trim()) newErrors.courseName = 'Course / Subject name is required';
+    if (!form.courseCode.trim()) newErrors.courseCode = 'Course / Subject code is required';
     if (!form.credits) {
-      newErrors.credits = 'Credits is required';
+      newErrors.credits = 'Weekly periods count is required';
     } else if (isNaN(Number(form.credits)) || Number(form.credits) <= 0) {
-      newErrors.credits = 'Credits must be a positive number';
+      newErrors.credits = 'Weekly periods must be a positive number';
     }
     return newErrors;
   };
@@ -131,13 +131,14 @@ export default function CourseForm({ open, course, onSave, onClose }) {
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              label="Credits"
+              label="Weekly Periods"
+              placeholder="e.g. 6 or 8 periods/week"
               name="credits"
               type="number"
               value={form.credits}
               onChange={handleChange}
               error={!!errors.credits}
-              helperText={errors.credits}
+              helperText={errors.credits || 'Timetable periods allocated per week'}
               required
               inputProps={{ min: 1 }}
             />
@@ -145,7 +146,7 @@ export default function CourseForm({ open, course, onSave, onClose }) {
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              label="Duration (e.g. 3 months)"
+              label="Academic Year / Term (e.g. Grade 12 - Term 1)"
               name="duration"
               value={form.duration}
               onChange={handleChange}

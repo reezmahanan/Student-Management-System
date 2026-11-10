@@ -63,14 +63,18 @@ export default function Register() {
     setLoading(true);
 
     try {
-      await register({
+      const authUser = await register({
         username: formData.username,
         email: formData.email,
         password: formData.password,
         fullName: formData.fullName,
         role: formData.role,
       });
-      navigate('/');
+      if (authUser?.linkedStudentId) {
+        navigate(`/students/${authUser.linkedStudentId}`);
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Username or email may already be in use.');
     } finally {

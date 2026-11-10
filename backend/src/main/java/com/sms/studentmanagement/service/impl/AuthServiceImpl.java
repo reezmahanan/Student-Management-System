@@ -72,13 +72,48 @@ public class AuthServiceImpl implements AuthService {
 
         Role role = request.getRole() != null ? request.getRole() : Role.ROLE_STUDENT;
 
+        Long studentId = request.getLinkedStudentId();
+        if (role == Role.ROLE_STUDENT && studentId == null) {
+            Student existingStudent = studentRepository.findAll().stream()
+                    .filter(s -> s.getEmail().equalsIgnoreCase(request.getEmail()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (existingStudent != null) {
+                studentId = existingStudent.getId();
+            } else {
+                String fullName = request.getFullName() != null && !request.getFullName().trim().isEmpty()
+                        ? request.getFullName().trim()
+                        : request.getUsername();
+                String[] names = fullName.split("\\s+", 2);
+                String firstName = names[0];
+                String lastName = names.length > 1 && !names[1].isEmpty() ? names[1] : names[0];
+                long count = studentRepository.count() + 1;
+                String admissionNo = String.format("ST/%d/%03d", LocalDate.now().getYear(), count);
+
+                Student newStudent = Student.builder()
+                        .admissionNo(admissionNo)
+                        .firstName(firstName)
+                        .lastName(lastName)
+                        .fullNameWithInitials(fullName)
+                        .email(request.getEmail())
+                        .enrollmentDate(LocalDate.now())
+                        .academicStream("Computer Science & Information Technology")
+                        .gender("OTHER")
+                        .build();
+
+                Student savedStudent = studentRepository.save(newStudent);
+                studentId = savedStudent.getId();
+            }
+        }
+
         User user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .fullName(request.getFullName())
                 .role(role)
-                .linkedStudentId(request.getLinkedStudentId())
+                .linkedStudentId(studentId)
                 .build();
 
         userRepository.save(user);
@@ -123,24 +158,24 @@ public class AuthServiceImpl implements AuthService {
             Course cs101 = courseRepository.save(Course.builder()
                     .courseName("Combined Mathematics & Computing")
                     .courseCode("MATH-101")
-                    .credits(4)
-                    .duration("Year 1 - Semester 1")
+                    .credits(8)
+                    .duration("Grade 12 & 13 Curriculum")
                     .description("Core mathematics and computational science curriculum.")
                     .build());
 
             Course web201 = courseRepository.save(Course.builder()
                     .courseName("Information & Communication Technology (ICT)")
                     .courseCode("CS-102")
-                    .credits(3)
-                    .duration("Year 1 - Semester 1")
+                    .credits(6)
+                    .duration("Grade 12 & 13 Curriculum")
                     .description("Computer science fundamentals covering software engineering, database systems, and networking.")
                     .build());
 
             Course phy301 = courseRepository.save(Course.builder()
                     .courseName("Physics & Electronics Laboratory")
                     .courseCode("PHY-103")
-                    .credits(4)
-                    .duration("Year 1 - Semester 1")
+                    .credits(8)
+                    .duration("Grade 12 & 13 Curriculum")
                     .description("Theoretical mechanics, electromagnetism, modern physics, and laboratory experiments.")
                     .build());
 
@@ -206,9 +241,14 @@ public class AuthServiceImpl implements AuthService {
                         .courses(Set.of(cs101, phy301))
                         .build();
 
-                studentRepository.save(s1);
+                Student savedS1 = studentRepository.save(s1);
                 studentRepository.save(s2);
                 studentRepository.save(s3);
+
+                userRepository.findByUsername("student").ifPresent(stuUser -> {
+                    stuUser.setLinkedStudentId(savedS1.getId());
+                    userRepository.save(stuUser);
+                });
             }
         }
     }

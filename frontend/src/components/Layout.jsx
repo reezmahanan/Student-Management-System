@@ -48,6 +48,17 @@ export default function Layout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const currentNavItems = [
+    { label: 'Dashboard', path: '/', icon: <DashboardIcon /> },
+    ...(user?.linkedStudentId ? [{ label: 'My Student Profile', path: `/students/${user.linkedStudentId}`, icon: <PeopleIcon /> }] : []),
+    { label: 'Students', path: '/students', icon: <PeopleIcon /> },
+    { label: 'Courses', path: '/courses', icon: <MenuBookIcon /> },
+    { label: 'Attendance', path: '/attendance', icon: <HowToRegIcon /> },
+    { label: 'Grades & Z-Score', path: '/grades', icon: <GradeIcon /> },
+    { label: 'Fees & Invoices', path: '/fees', icon: <PaymentIcon /> },
+    { label: 'Academic Advisor', path: '/advisor', icon: <WarningAmberIcon /> },
+  ];
+
   const handleLogout = () => {
     logout();
     navigate('/login');
@@ -154,7 +165,7 @@ export default function Layout() {
             </Typography>
           </Box>
           <List sx={{ px: 1 }}>
-            {navItems.map((item) => (
+            {currentNavItems.map((item) => (
               <ListItem key={item.label} disablePadding sx={{ mb: 0.5 }}>
                 <NavLink
                   to={item.path}

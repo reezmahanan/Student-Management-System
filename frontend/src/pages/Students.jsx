@@ -113,11 +113,18 @@ export default function Students() {
   const handleFormSave = async (data) => {
     if (editingStudent) {
       await updateStudent(editingStudent.id, data);
+      setFormOpen(false);
+      fetchStudents();
     } else {
-      await createStudent(data);
+      const res = await createStudent(data);
+      setFormOpen(false);
+      const createdId = res.data?.data?.id || res.data?.id;
+      if (createdId) {
+        navigate(`/students/${createdId}`);
+      } else {
+        fetchStudents();
+      }
     }
-    setFormOpen(false);
-    fetchStudents();
   };
 
   const handleDeleteConfirm = async () => {

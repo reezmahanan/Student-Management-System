@@ -292,7 +292,7 @@ export default function StudentDetail() {
                           <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
                             <Chip label={course.courseCode} size="small" variant="outlined" color="primary" />
                             {course.credits && (
-                              <Chip label={`${course.credits} Credits`} size="small" color="success" variant="outlined" />
+                              <Chip label={`${course.credits} Periods/wk`} size="small" color="primary" variant="outlined" />
                             )}
                             {course.duration && (
                               <Chip label={course.duration} size="small" variant="outlined" />

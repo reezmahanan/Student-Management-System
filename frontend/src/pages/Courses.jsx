@@ -106,7 +106,7 @@ export default function Courses() {
         <Table>
           <TableHead sx={{ bgcolor: 'primary.main' }}>
             <TableRow>
-              {['ID', 'Course Name', 'Code', 'Credits', 'Duration', 'Description', 'Actions'].map((h) => (
+              {['ID', 'Subject / Course', 'Subject Code', 'Weekly Periods', 'Duration / Academic Year', 'Description', 'Actions'].map((h) => (
                 <TableCell key={h} sx={{ color: '#fff', fontWeight: 700 }}>{h}</TableCell>
               ))}
             </TableRow>
@@ -122,7 +122,7 @@ export default function Courses() {
               <TableRow>
                 <TableCell colSpan={7} align="center" sx={{ py: 6 }}>
                   <MenuBookIcon sx={{ fontSize: 48, color: 'text.disabled', mb: 1 }} />
-                  <Typography color="text.secondary">No courses found. Add your first course!</Typography>
+                  <Typography color="text.secondary">No subjects found. Add your first subject!</Typography>
                 </TableCell>
               </TableRow>
             ) : (
@@ -134,7 +134,7 @@ export default function Courses() {
                     <Chip label={c.courseCode} size="small" variant="outlined" color="primary" />
                   </TableCell>
                   <TableCell>
-                    <Chip label={`${c.credits} cr`} size="small" color="success" />
+                    <Chip label={`${c.credits} Periods/wk`} size="small" color="primary" variant="outlined" sx={{ fontWeight: 600 }} />
                   </TableCell>
                   <TableCell>{c.duration || '—'}</TableCell>
                   <TableCell
